@@ -66,7 +66,7 @@ class M_Auth extends Model
         $this->db->set('user_name',Post()->username);
         $this->db->set('user_password',password_hash(Post()->password,PASSWORD_DEFAULT));
         $this->db->set('user_active',1);
-        $this->db->set('user_order',1);
+        $this->db->set('user_order',$this->_getLastQuery());
         $this->db->set('user_created_at',date('Y-m-d H:i:s'));
         $this->db->insert('mst_user');
 
@@ -99,5 +99,28 @@ class M_Auth extends Model
         }
 
         return $count;
+    }
+
+    /**
+     * Take the last value from the user_order column
+     * 
+     * @return int $order
+     */
+    public function _getLastQuery()
+    {
+        $order = 0;
+        
+        $this->db->select('a.user_order');
+        $this->db->from('mst_user a');
+        $this->db->order_by('a.user_order','DESC');
+        $this->db->limit('1');
+        $this->db->get();
+
+        if($this->db->num_rows() > 0)
+        {
+            $order = $this->result_array()[0]['user_order'] + 1;
+        }
+
+        return $order;
     }
 }

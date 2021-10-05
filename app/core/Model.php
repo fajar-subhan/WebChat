@@ -89,6 +89,20 @@ class Model extends Database
      */
     private $join;
 
+    /**
+     * Lets you limit the number of rows 
+     * 
+     * @var string $limit
+     */
+    private $limit;
+
+    /**
+     * Lets you set an ORDER BY clause.
+     * 
+     * @var string $order_by
+     */
+    private $order_by;
+
     public function __construct()
     {
         $this->conn = parent::__construct();
@@ -284,6 +298,33 @@ class Model extends Database
         }
         /**
          * End Join
+         */
+
+
+        // --------------------------------------------------------------------------------
+
+        /**
+         * Start Order By
+         */
+        if(!is_null($this->order_by))
+        {
+            $sql .= $this->order_by;
+        }
+        /**
+         * End Order By
+         */
+
+        // --------------------------------------------------------------------------------
+
+        /**
+         * Start Limit
+         */
+        if(!is_null($this->limit))
+        {
+            $sql .= $this->limit;
+        }
+        /**
+         * End Limit
          */
 
         return $sql;
@@ -627,4 +668,46 @@ class Model extends Database
 
         return $this->join;
     }
+
+    /**
+     * Lets you limit the number of rows 
+     * 
+     * @param int $value  Number of rows to limit the results to
+     * @param int $offset Number of rows to skip
+     */
+    public function limit($value,$offset = "")
+    {
+        if(!empty($value) && empty($offset))
+        {
+            $this->limit = " LIMIT " . $value;
+        }
+        else if(!empty($value) && !empty($offset))
+        {
+            $this->limit = " LIMIT " . $value . "," . $offset;
+        }
+
+        return $this->limit;
+    }
+
+    /**
+     * Lets you set an ORDER BY clause.
+     *
+     * @param string $orderby   Field to order by
+     * @param string $direction The order requested - ASC, DESC
+     */
+    public function order_by($orderby,$direction)
+    {
+        if(!empty($orderby) && !empty($direction))
+        {
+            $this->order_by = " ORDER BY " . $orderby . " " . $direction;
+        }
+        
+        else if(is_string($orderby) && empty($direction))
+        {
+            $this->order_by = " ORDER BY $orderby";
+        }
+
+        return $this->order_by;
+    } 
+
 }

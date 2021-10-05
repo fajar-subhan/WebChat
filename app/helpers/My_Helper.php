@@ -9,6 +9,7 @@
  * 
  */
 
+use app\core\Model;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 /**
@@ -231,3 +232,115 @@ if(!function_exists('GetOS'))
         return $os;
     }
 }
+
+/**
+ * Retrieving information and processing data so that it can be used for encryption purpose
+ * 
+ * @return array $data
+ */
+if(!function_exists("Security"))
+{
+    function Security()
+    {
+        $data = [];
+
+        /* Read file security.ini and get config encription */
+        $security =  parse_ini_file("Security.ini");
+        
+        /* Key to unlock encryption */
+        $key      = hash("sha256",$security['encription_key']);
+                
+        /* Cipher_algo AES-256-CBC */
+        $algo     = $security['encription_algo'];
+
+        /* 
+         * A non-null initialization vector. 
+         * For the length of the character depending on the method used, 
+         * 
+         */
+        $ivlength = openssl_cipher_iv_length($security['encription_algo']);
+        $iv       = substr(hash("sha256",$security['encription_iv']),0,$ivlength);
+        
+        $data = 
+        [
+            'key'   => $key,
+            'algo'  => $algo,
+            'iv'    => $iv
+        ];
+
+        if(is_array($data))
+        {
+            return $data;
+        }
+    }
+}
+
+/**
+ * Create a function to encrypt a data using openssl_encrypt
+ * 
+ * @param   string $data
+ * @return  string $encrypt
+ * @link    https://www.php.net/manual/en/function.openssl-encrypt.php
+ */
+if(!function_exists('Encrypt'))
+{
+    function Encrypt($data)
+    {
+        /* Retrieve key,algo,and iv information */
+        $sec      = Security();
+        
+        /* Time to encrypt with openssl_encrypt */
+        $encrypt  = base64_encode(openssl_encrypt($data,$sec['algo'],$sec['key'],0,$sec['iv']));
+
+        return $encrypt;
+    }
+}
+
+/**
+ * Create a function to decrypt a data using openssl_decrypt
+ * 
+ * @param   string $data
+ * @return  string $decrypt
+ * @link    https://www.php.net/manual/en/function.openssl-decrypt
+ */
+if(!function_exists('Decrypt'))
+{
+    function Decrypt($data)
+    {
+        /* Retrieve key,algo,and iv information */
+        $sec      = Security();
+
+        /* Time to decrypt with openssl_decrypt */
+        $decrypt  = openssl_decrypt(base64_decode($data),$sec['algo'],$sec['key'],0,$sec['iv']);
+
+        return $decrypt;
+    }
+}
+
+/**
+ * Create a log to view user activity,
+ * and enter it into the user_activity_log table
+ * 
+ * @param string $module : module name 
+ * @param string $name   : activity name
+ * @param string $desc   : User login | User logout 
+ * @param string $userid : user id 
+ */
+if(!function_exists("EventLoger"))
+{
+    function EventLoger($module = "",$name = "",$desc = "" ,$userid = "")
+    {
+        $FS = new Model();
+        
+        $FS->db->set('user_activity_module',$module);
+        $FS->db->set('user_id',$userid);
+        $FS->db->set('user_activity_name',$name);
+        $FS->db->set('user_activity_desc',$desc);
+        $FS->db->set('user_activity_address',GetIP());
+        $FS->db->set('user_activity_browser',GetBrowser());
+        $FS->db->set('user_activity_os',GetOS());
+        $FS->db->set('user_activity_date',date('Y-m-d H:i:s'));
+        $FS->db->insert('log_user_activity');
+    }
+}
+

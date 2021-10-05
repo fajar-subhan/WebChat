@@ -496,7 +496,7 @@ class Model extends Database
         $values = str_repeat('?,',count($array_values)-1) . "?";
 
         $sql = "INSERT INTO $table_name ($field) VALUES ($values)";
-        
+
         $this->num_rows = $this->run_query($sql,$array_values)->rowCount();
     }
 

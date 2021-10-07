@@ -28,7 +28,7 @@ class Auth extends Controller
      */
     public function register()
     {
-        $this->onlyView('auth/view_register_index');
+        $this->layoutView('auth/view_register_index');
     }
     
     /**
@@ -81,7 +81,7 @@ class Auth extends Controller
      */
     public function forgot()
     {
-        $this->onlyView('auth/view_forgot_password');
+        $this->layoutView('auth/view_forgot_password');
     }
 
     /**

@@ -9,6 +9,7 @@ class Home extends Controller
 
     public function __construct()
     {
+        self::set_layout('template_home');
         $this->M_Home = $this->model('M_Home');
     }
 

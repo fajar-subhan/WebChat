@@ -9,6 +9,7 @@ class Auth extends Controller
 
     public function __construct()
     {
+        Controller::set_layout('template_auth');
         $this->M_Auth = $this->model('M_Auth');
     }
     
@@ -18,9 +19,9 @@ class Auth extends Controller
      */
     public function index()
     {
-        $this->onlyView('auth/view_auth_index');
+        $this->layoutView('auth/view_auth_index');
     }
-
+    
     /**
      * Handle index register page
      * 
@@ -29,7 +30,7 @@ class Auth extends Controller
     {
         $this->onlyView('auth/view_register_index');
     }
-
+    
     /**
      * Check if the username is already used by another user
      * 
@@ -38,14 +39,14 @@ class Auth extends Controller
     public function check_username()
     {
         $result = ['status' => false,'message' => null];
-
+        
         $check_username = $this->M_Auth->_checkUsername();
-
+        
         if($check_username)
         {
             $result = ['status' => true,'message' => 'Username already used'];
         }
-
+        
         header('Content-Type: application/json');
         echo json_encode($result);
     }
@@ -58,9 +59,9 @@ class Auth extends Controller
     public function add_account()
     {
         $result = ['status' => false,'message' => null];
-
+        
         $add_student = $this->M_Auth->_addAccount();
-
+        
         if($add_student)
         {
             $result = 
@@ -69,11 +70,11 @@ class Auth extends Controller
                 'message' => 'New account created successfully'
             ];
         }
-
+        
         header('Content-Type: application/json');
         echo json_encode($result);
     }
-
+    
     /**
      * Handle index forgot password
      * 

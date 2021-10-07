@@ -85,7 +85,7 @@
     <script src="<?php echo BASE_URL ?>assets/vendor/bootstrap/js/popper.js"></script>
     <script src="<?php echo BASE_URL ?>assets/vendor/bootstrap/js/bootstrap.min.js"></script>
     <!--===============================================================================================-->
-    <script src="<?php echo BASE_URL ?>assets/js/main.js"></script>
+    <script src="<?php echo BASE_URL ?>assets/js/auth/main.js"></script>
     <!--===============================================================================================-->
     <script src="<?php echo BASE_URL ?>assets/js/auth/auth.js"></script>
     <script src="<?php echo BASE_URL ?>assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>

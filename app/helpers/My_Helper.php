@@ -331,16 +331,103 @@ if(!function_exists("EventLoger"))
     function EventLoger($module = "",$name = "",$desc = "" ,$userid = "")
     {
         $FS = new Model();
-        
-        $FS->db->set('user_activity_module',$module);
-        $FS->db->set('user_id',$userid);
-        $FS->db->set('user_activity_name',$name);
-        $FS->db->set('user_activity_desc',$desc);
-        $FS->db->set('user_activity_address',GetIP());
-        $FS->db->set('user_activity_browser',GetBrowser());
-        $FS->db->set('user_activity_os',GetOS());
-        $FS->db->set('user_activity_date',date('Y-m-d H:i:s'));
-        $FS->db->insert('log_user_activity');
+            
+        $FS->set('user_activity_module',$module);
+        $FS->set('user_id',$userid);
+        $FS->set('user_activity_name',$name);
+        $FS->set('user_activity_desc',$desc);
+        $FS->set('user_activity_address',GetIP());
+        $FS->set('user_activity_browser',GetBrowser());
+        $FS->set('user_activity_os',GetOS());
+        $FS->set('user_activity_date',date('Y-m-d H:i:s'));
+        $FS->insert('user_activity_log');
     }
 }
 
+/**
+ * Setting session
+ * 
+ * @param array $session
+ */
+if(!function_exists('set_userdata'))
+{
+    function set_userdata($session = [])
+    {
+        if(is_array($session))
+        {
+            foreach($session as $key => $value)
+            {
+                $_SESSION[$key] = $value;
+            }            
+        }
+    }
+}
+
+/**
+ * Retrieve session data
+ * 
+ * @param string $session
+ */
+if(!function_exists('userdata'))
+{
+    function userdata($session)
+    {
+        if(!empty($_SESSION))
+        {
+            return $_SESSION[$session];
+        }
+    }
+}
+
+/**
+ * This helper function gives you friendlier syntax to set browser cookies.
+ * 
+ * @param mixed  $name   Cookie name or associative array of all of the parameters available to this function
+ * @param string $value  Cookie value
+ * @param int    $expire Number of seconds until expiration
+ * @param string $domain Cookie domain 
+ * @param string $path   Cookie path
+ * @return vaid
+ */
+if(!function_exists('set_cookie'))
+{
+    function set_cookie($name,$value = "",$expire = "",$domain = "",$path = "/")
+    {
+        if(!empty($name) && !empty($value))
+        {
+            setcookie($name,$value,$expire,$path,$domain);
+        }
+    }
+}
+
+/**
+ * This helper function gives your friendlier syntax to get browser cookies
+ * 
+ * @param string $index Cookie name
+ * @return string
+ */
+if(!function_exists('get_cookie'))
+{
+    function get_cookie($index)
+    {
+        return !empty($_COOKIE[$index]) ? $_COOKIE[$index] : '';
+    }
+}
+
+/** 
+ * This helper function provides a more friendly syntax 
+ * to check if there are cookies in the browser
+ * 
+ * If no cookie then 0
+ * If there is a cookie then 1
+ * 
+ * @param string $index
+ * @return int 
+*/
+if(!function_exists('cek_cookie'))
+{
+    function cek_cookie($index)
+    {
+        return empty($_COOKIE[$index]) ? false : true;
+    }
+}

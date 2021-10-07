@@ -107,4 +107,68 @@ class Auth extends Controller
         echo json_encode($result);        
     }
 
+    /**
+     * Check if the username and password are in the database
+     * if they are the same and valid then please login
+     * 
+     * @return json 
+     */ 
+    public function login()
+    {
+        $result     = ['status' => false,'message' => 'Username or password do not match'];
+        $username   = Post()->username;
+        $password   = cek_cookie('password') ? Decrypt(base64_decode(Post()->password)) : base64_decode(Post()->password);
+
+        $user       = $this->M_Auth->_getDataByUsername($username);
+
+        if($user['status'])
+        {
+            /* If the password or username does not match the data in the database, then give an error message */
+            if(!password_verify($password,$user['data']['password']) || $username !== $user['data']['username'])
+            {
+                $result = 
+                [
+                    'status'    => false,
+                    'message'   => 'Username or password do not match'
+                ];
+            }
+            else 
+            {
+                $remember = Post()->remember;
+                
+                /* If true or checked then create a cookie */
+                if($remember === "true")
+                {
+                    set_cookie('username',Encrypt($username),time() + 60 * 60 * 24 * 7,'','/');
+                    set_cookie('password',Encrypt($password),time() + 60 * 60 * 24 * 7 ,'','/');
+                }
+
+                $result = 
+                [
+                    'status'    => true,
+                    'message'   => 'Successfully'
+                ];
+
+                $session = 
+                [
+                    'username' => Encrypt($user['data']['username']),
+                    'password' => Encrypt($user['data']['password']),
+                    'id'       => $user['data']['id'],
+                    'login'    => 1
+                ];  
+
+                /* Update some column in table mst_user when user login */
+                $this->M_Auth->_upadateLogin($user['data']['id']);
+
+                /* Create log login */
+                EventLoger('Auth','Login','User login to app',userdata('id'));
+
+                set_userdata($session);
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+
 }

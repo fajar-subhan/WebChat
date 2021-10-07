@@ -243,4 +243,80 @@ $(document).ready(function()
         e.preventDefault();
     });
 
+    /**
+     * Login Proses 
+     * 
+     * This function is used to check the account logged into the application.
+     * From validation to login process using ajax
+     * 
+     */
+    $("#form_login").on("submit",function(e)  
+    {
+        var username = $("#username").val().trim();
+        var password = $("#password").val().trim();
+        var message  = "";
+        var error    = 0;
+
+        /* Chcek if the username is already filled */
+        if(username === "")
+        {
+            message = "Username is required";
+            validation(message,"#username_error");
+            error++;
+        }
+        else if(password === "")
+        {
+            message = "Password is required";
+            validation(message,'#password_error');
+            error++;
+        }
+
+        /**
+         * If the error message is empty and the username and password 
+         * are already filled in, then check whether 
+         * the username and password are in the database with ajax
+         *
+         */
+        if(error === 0)
+        {
+            /**
+             * If checked = true, if not checked = false 
+             * 
+             * @var {Boolean}
+             */
+            var remember = $("#remember")[0].checked;
+
+            $.ajax({
+                url      : 'auth/login',
+                type     : 'post',
+                dataType : 'json',
+                data     : 
+                {
+                    username : username,
+                    password : btoa(password),
+                    remember : remember
+                },
+                success  : function(xhr)
+                {
+                    if(xhr.status)
+                    {
+                        window.location.href = 'home';
+                    }
+                    else 
+                    {
+                        swal.fire({
+                            icon  : 'error',
+                            title : 'Failed',
+                            text  : xhr.message,
+                        });
+                        
+                        $('#form_login')[0].reset();
+                    }
+                }
+            })
+        }
+
+        e.preventDefault();
+    })
+
 });

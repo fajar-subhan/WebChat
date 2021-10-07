@@ -109,7 +109,7 @@ class M_Auth extends Model
     public function _getLastQuery()
     {
         $order = 0;
-        
+        $this->reset_select();
         $this->db->select('a.user_order');
         $this->db->from('mst_user a');
         $this->db->order_by('a.user_order','DESC');
@@ -122,5 +122,53 @@ class M_Auth extends Model
         }
 
         return $order;
+    }
+
+    /**
+     * Retrieve user data based on the username entered when logging in
+     * 
+     * @param string $username
+     * @return array $result
+     */
+    public function _getDataByUsername($username)
+    {
+        $result = ['status' => false,'data' => null];
+        
+        $this->db->select('
+        a.user_id as id,
+        a.user_full_name as fullname,
+        a.user_name as username,
+        a.user_password as `password`
+        ');
+        $this->db->from('mst_user a');
+        $this->db->where('a.user_active',1);
+        $this->db->where('a.user_name',$username);
+        $this->db->get();
+
+        if($this->db->num_rows() > 0)
+        {
+            $result = 
+            [
+                'status' => true,
+                'data'   => $this->db->result_array()[0]
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     *  Update some column in table mst_user when user login
+     * 
+     * 
+     */
+    public function _upadateLogin($id)
+    {
+        $this->db->reset_select();
+        $this->db->set('user_ip_address',GetIP());
+        $this->db->set('user_last_login_date',date('Y-m-d H:i:s'));
+        $this->db->set('user_login_status',1);
+        $this->db->where('user_id',$id);
+        $this->db->update('mst_user');
     }
 }

@@ -14,16 +14,6 @@
     <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/fonts/iconic/css/material-design-iconic-font.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/vendor/animate/animate.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/vendor/css-hamburgers/hamburgers.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/vendor/animsition/css/animsition.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/vendor/select2/select2.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/vendor/daterangepicker/daterangepicker.css">
-    <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/css/util.css">
     <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/css/main.css">
     <!--===============================================================================================-->
@@ -39,19 +29,26 @@
                         Login
                     </span>
 
-                    <div class="wrap-input100 validate-input m-b-23" data-validate="">
+                    <div class="wrap-input100 m-b-23" id="username_error" data-validate="">
                         <span class="label-input100">Username</span>
-                        <input class="input100" type="text" name="username" placeholder="Type your username">
+                        <input class="input100" type="text" id="username" name="username" value="<?php echo cek_cookie('username') ? Decrypt(get_cookie('username')) : '';  ?>" placeholder="Type your username">
                         <span class="focus-input100" data-symbol="&#xf206;"></span>
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Password is required">
+                    <div class="wrap-input100 m-b-23" id="password_error" data-validate="">
                         <span class="label-input100">Password</span>
-                        <input class="input100" type="password" name="pass" placeholder="Type your password">
+                        <input class="input100" type="password" id="password" name="password" value="<?php echo cek_cookie('password') ? get_cookie('password') : ''; ?>" placeholder="Type your password">
                         <span class="focus-input100" data-symbol="&#xf190;"></span>
                     </div>
 
                     <div class="text-right p-t-8 p-b-31">
+                        <span>
+                            <input type="checkbox" name="remember" id="remember">
+                            <label for="remember" style="font-family: Poppins-Regular;font-size : 14px;line-height:1.7;color:#666666;margin:0px;padding-right:34%;">
+                                Remember me?
+                            </label>
+                        </span>
+
                         <a href="<?php echo BASE_URL ?>auth/forgot">
                             Forgot password?
                         </a>
@@ -88,21 +85,14 @@
     <!--===============================================================================================-->
     <script src="<?php echo BASE_URL ?>assets/vendor/jquery/jquery-3.2.1.min.js"></script>
     <!--===============================================================================================-->
-    <script src="<?php echo BASE_URL ?>assets/vendor/animsition/js/animsition.min.js"></script>
-    <!--===============================================================================================-->
     <script src="<?php echo BASE_URL ?>assets/vendor/bootstrap/js/popper.js"></script>
     <script src="<?php echo BASE_URL ?>assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="<?php echo BASE_URL ?>assets/vendor/select2/select2.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="<?php echo BASE_URL ?>assets/vendor/daterangepicker/moment.min.js"></script>
-    <script src="<?php echo BASE_URL?>assets/vendor/daterangepicker/daterangepicker.js"></script>
-    <!--===============================================================================================-->
-    <script src="<?php echo BASE_URL ?>assets/vendor/countdowntime/countdowntime.js"></script>
     <!--===============================================================================================-->
     <script src="<?php echo BASE_URL ?>assets/js/main.js"></script>
     <!--===============================================================================================-->
     <script src="<?php echo BASE_URL ?>assets/js/auth/auth.js"></script>
+    <script src="<?php echo BASE_URL ?>assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
+
 
 </body>
 

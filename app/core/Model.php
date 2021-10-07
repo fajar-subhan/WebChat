@@ -710,4 +710,25 @@ class Model extends Database
         return $this->order_by;
     } 
 
+	/**
+	 * Reset Query Builder values.
+	 *
+	 * Publicly-visible method to reset the QB values.
+	 *
+     * @return DB_Query_builder
+     */
+    public function reset_select()
+    {
+        $data = array(
+            $this->where    = array(),
+            $this->where_in = array(),
+            $this->order_by = "",
+            $this->limit    = ""
+        );
+
+        foreach($data as $key => $value)
+        {
+            $this->$key =$value;
+        }
+    }
 }

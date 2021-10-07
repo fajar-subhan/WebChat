@@ -3,6 +3,8 @@
 use app\core\App;
 use app\Core\Request;
 
+session_start();
+
 /*
 |--------------------------------------------------------------------------
 |  Definition of config

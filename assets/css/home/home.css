@@ -58,8 +58,11 @@ html {
     background-color: rgba(0, 0, 0, 0.3) !important;
     border: 0 !important;
     color: white !important;
-    height: 60px !important;
-    overflow-y: auto;
+    height: 50px !important;
+    /* overflow-y: auto; */
+    border-radius: 5px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
 }
 
 .type_msg:focus {
@@ -143,7 +146,7 @@ html {
 }
 
 .offline {
-    background-color: #c23616 !important;
+    background-color: #acacac !important;
 }
 
 .user_info {
@@ -249,7 +252,6 @@ html {
 
 .action_menu ul li i {
     padding-right: 10px;
-
 }
 
 .action_menu ul li:hover {
@@ -261,5 +263,100 @@ html {
     .contacts_card {
         margin-bottom: 15px !important;
     }
+}
+
+/** <======================= Contact top left ====================================> **/
+#contact_btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.action_contact {
+    z-index: 1;
+    position: absolute;
+    padding: 15px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 15px;
+    top: 30px;
+    display: none;
+}
+
+.action_contact ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.action_contact ul li {
+    width: 100%;
+    /* padding: 10px 15px; */
+    margin-bottom: 5px;
+}
+
+
+.action_contact ul li i {
+    padding-right: 10px;
+}
+
+.action_contact ul li:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+@media(max-width: 576px) {
+    .contacts_card {
+        margin-bottom: 15px !important;
+    }
+}
+
+
+/** <======================= Status top left ====================================> **/
+.status {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    display: inline-block;
+}
+
+.status-online {
+    background-color: #4cd137;
+}
+
+.status-offline {
+    background-color: #acacac;
+}
+
+.status-outside {
+    background-color: yellow;
+}
+
+.status-busy {
+    background-color: #c23616 ;
+}
+
+/** <======================= File Upload / File Image ====================================> **/
+.file_span {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: white;
+    border: 0px !important;
+    padding: 17px;
+    border-radius: 50px !important;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: transform .8s ease-in-out;
+}
+
+.file_span:hover {
+    transform : rotate(360deg);
+}
+
+.file {
+    display: none;
 }
 

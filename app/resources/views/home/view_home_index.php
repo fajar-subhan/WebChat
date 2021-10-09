@@ -1,8 +1,33 @@
 <div class="container-fluid h-100">
     <div class="row justify-content-center h-100">
+        <!-- <============== Start chat on the left ===================> -->
         <div class="col-md-4 col-xl-3 chat">
             <div class="card mb-sm-3 mb-md-0 contacts_card">
                 <div class="card-header">
+                    <!-- Contact Profile -->
+                    <ui class="contacts">
+                        <li>
+                            <div class="d-flex bd-highlight">
+                                <div class="img_cont">
+                                    <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
+                                    <span class="online_icon"></span>
+                                </div>
+                                <div class="user_info">
+                                    <span>Khalid</span>
+                                    <p>Kalid is online</p>
+
+                                    <div class="action_contact">
+                                        <ul>
+                                            <li><span class="status status-online"></span> Online</li>
+                                            <li><span class="status status-offline"></span> Offline</li>
+                                            <li><span class="status status-outside"></span> Outside</li>
+                                            <li><span class="status status-busy"></span> Busy</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ui>
                     <div class="input-group">
                         <input type="text" placeholder="Search..." name="" class="form-control search">
                         <div class="input-group-prepend">
@@ -79,6 +104,9 @@
                 <div class="card-footer"></div>
             </div>
         </div>
+        <!-- <============== End chat on the left ===================> -->
+
+        <!-- <============== Start chat on the right ===================> -->
         <div class="col-md-8 col-xl-6 chat">
             <div class="card">
                 <div class="card-header msg_head">
@@ -165,16 +193,29 @@
                 </div>
                 <div class="card-footer">
                     <div class="input-group">
-                        <div class="input-group-append">
-                            <span class="input-group-text attach_btn" style="padding:22px"><i class="fa fa-paperclip"></i></span>
+                        <label for="file_image">
+                            <span class="input-group-text file_span"><i class="fa fa-picture-o" aria-hidden="true"></i></span>
+                            <input type="file" class="file" id="file_image" accept="image/*">
+                        </label>
+
+                        <label for="file_upload">
+                            <span class="input-group-text file_span"><i class="fa fa-paperclip" aria-hidden="true"></i></span>
+                            <input type="file" class="file" id="file_upload">
+                        </label>
+
+                        <div class="span6">
+                            <textarea class="type_msg" id="message"></textarea>
                         </div>
-                        <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
-                        <div class="input-group-append">
-                            <span class="input-group-text send_btn" style="padding:22px"><i class="fa fa-location-arrow"></i></span>
-                        </div>
+
+                        <label for="file_send">
+                            <span class="input-group-text file_span" id="file_send" style="margin-left: 15px;"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>
+                        </label>
+
+
                     </div>
                 </div>
             </div>
         </div>
+        <!-- <============== Start chat on the right ===================> -->
     </div>
 </div>

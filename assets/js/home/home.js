@@ -7,9 +7,14 @@ $(document).ready(function () {
      * This is for the top left profile section
      * 
      */
-    $('.img_cont').click(function()
+    $('#action_profile_btn').click(function()
     {
         $('.action_contact').toggle();
     });
 
+    /**
+     * This is for the contact list section on the left
+     *
+     */
+        
 });

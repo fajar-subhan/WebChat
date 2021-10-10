@@ -15,6 +15,14 @@ class Home extends Controller
 
     public function index()
     {
+        $data = 
+        [
+            'list_contact' => 
+            [
+
+            ]
+        ];
+
         $this->layoutView('home/view_home_index');
     }
 }

@@ -8,10 +8,12 @@
                     <ui class="contacts">
                         <li>
                             <div class="d-flex bd-highlight">
-                                <div class="img_cont">
+                                <div id="action_profile_btn">
                                     <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
+
+                                    <span id="status_online"></span>
                                 </div>
+
                                 <div class="user_info">
                                     <span>Khalid</span>
                                     <p>Kalid is online</p>
@@ -39,7 +41,7 @@
                 </div>
                 <div class="card-body contacts_body">
                     <ui class="contacts">
-                        <li class="active">
+                        <li>
                             <div class="d-flex bd-highlight">
                                 <div class="img_cont">
                                     <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
@@ -48,54 +50,6 @@
                                 <div class="user_info">
                                     <span>Khalid</span>
                                     <p>Kalid is online</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="https://2.bp.blogspot.com/-8ytYF7cfPkQ/WkPe1-rtrcI/AAAAAAAAGqU/FGfTDVgkcIwmOTtjLka51vineFBExJuSACLcBGAs/s320/31.jpg" class="rounded-circle user_img">
-                                    <span class="online_icon offline"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Taherah Big</span>
-                                    <p>Taherah left 7 mins ago</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="https://i.pinimg.com/originals/ac/b9/90/acb990190ca1ddbb9b20db303375bb58.jpg" class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Sami Rafi</span>
-                                    <p>Sami is online</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="https://i.pinimg.com/originals/ac/b9/90/acb990190ca1ddbb9b20db303375bb58.jpg" class="rounded-circle user_img">
-                                    <span class="online_icon offline"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Nargis Hawa</span>
-                                    <p>Nargis left 30 mins ago</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="https://static.turbosquid.com/Preview/001214/650/2V/boy-cartoon-3D-model_D.jpg" class="rounded-circle user_img">
-                                    <span class="online_icon offline"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Rashid Samim</span>
-                                    <p>Rashid left 50 mins ago</p>
                                 </div>
                             </div>
                         </li>
@@ -128,7 +82,6 @@
                     <div class="action_menu">
                         <ul>
                             <li><i class="fa fa-user-circle"></i> View profile</li>
-                            <li><i class="fa fa-users"></i> Add to close friends</li>
                             <li><i class="fa fa-plus"></i> Add to group</li>
                             <li><i class="fa fa-ban"></i> Block</li>
                         </ul>
@@ -180,7 +133,6 @@
                             <span class="msg_time">9:07 AM, Today</span>
                         </div>
                     </div>
-
                     <div class="d-flex justify-content-start mb-4">
                         <div class="img_cont_msg">
                             <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
@@ -193,6 +145,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="input-group">
+
                         <label for="file_image">
                             <span class="input-group-text file_span"><i class="fa fa-picture-o" aria-hidden="true"></i></span>
                             <input type="file" class="file" id="file_image" accept="image/*">
@@ -203,15 +156,13 @@
                             <input type="file" class="file" id="file_upload">
                         </label>
 
-                        <div class="span6">
-                            <textarea class="type_msg" id="message"></textarea>
+                        <textarea name="" class="form-control type_msg" id="message" placeholder="Type your message..."></textarea>
+
+                        <div class="input-group-append">
+                            <label for="file_send">
+                                <span class="input-group-text file_span" id="file_send"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>
+                            </label> -->
                         </div>
-
-                        <label for="file_send">
-                            <span class="input-group-text file_span" id="file_send" style="margin-left: 15px;"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>
-                        </label>
-
-
                     </div>
                 </div>
             </div>

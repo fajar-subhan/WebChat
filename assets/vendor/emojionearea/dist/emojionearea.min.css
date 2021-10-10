@@ -107,15 +107,14 @@
 .emojionearea.form-control {
     display: block;
     position: relative !important;
-    width: 100%;
     height: auto;
-    padding: 0;
+    padding: 0px;
     font-size: 14px;
     background-color: #FFF;
     border: 1px solid #CCC;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    border-radius: 3px;
+    border-radius: 10px !important;
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
@@ -770,18 +769,4 @@
     background-repeat: no-repeat;
     background-position: 20px 4px;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAQMAAABsu86kAAAABlBMVEUAAAC/v79T5hyIAAAAAXRSTlMAQObYZgAAABNJREFUCNdjYGNgQEb/P4AQqiAASiUEG6Vit44AAAAASUVORK5CYII=) !important
-}
-
-@media screen and (min-width:1500px) and  (max-width:1900px) {
-    .emojionearea .emojionearea-editor {
-        padding: 0px !important;
-        width: 510px !important;
-    }
-}
-
-@media screen and (min-width:170px) and  (max-width:800) {
-    .emojionearea .emojionearea-editor {
-        padding: 0px !important;
-        width: 400px !important;
-    }
 }

@@ -191,6 +191,27 @@ class Model extends Database
         // --------------------------------------------------------------------------------
         
         /**
+         * Start Join
+         */
+        if(!is_null($this->join))
+        {
+            foreach($this->join as $key => $value)
+            {
+                $join[] = $value;
+            }
+
+            $sql .= implode("",$join);
+        }
+        /**
+         * End Join
+         */
+
+        // --------------------------------------------------------------------------------
+
+
+        // --------------------------------------------------------------------------------
+        
+        /**
          * Start Where 
          */
         if(!empty($this->where))
@@ -198,12 +219,12 @@ class Model extends Database
             if(count($this->where) === 1)
             {
                 $sql .= " WHERE ";
-    
+                
                 foreach($this->where as $field => $value)
                 {
-                    $where[] = $field . " = '$value'";
+                    $where[] = $field ." '$value'";
                 }
-    
+                
                 $sql .= implode(" ",$where);
             }
             
@@ -213,7 +234,7 @@ class Model extends Database
     
                 foreach($this->where as $key => $value)
                 {
-                    $where[]  = " $key = '$value'";
+                    $where[]  = $key . " '$value'";
                 }
     
                 $sql .= implode(" AND ",$where);
@@ -281,27 +302,6 @@ class Model extends Database
         /**
          * End Where IN
          */
-        
-        // --------------------------------------------------------------------------------
-        
-        /**
-         * Start Join
-         */
-        if(!is_null($this->join))
-        {
-            foreach($this->join as $key => $value)
-            {
-                $join[] = $value;
-            }
-
-            $sql .= implode("",$join);
-        }
-        /**
-         * End Join
-         */
-
-
-        // --------------------------------------------------------------------------------
 
         /**
          * Start Order By
@@ -326,7 +326,7 @@ class Model extends Database
         /**
          * End Limit
          */
-
+        
         return $sql;
     }
     
@@ -463,9 +463,18 @@ class Model extends Database
      */
     public function where($field,$value)
     {
-        if(is_string($field))
+        $x = explode(' ',$field);
+        
+        if(is_array($x) && count($x) > 1)
         {
-            $field = [$field => $value];
+            $field = [implode(' ',$x) => $value];
+        }
+        
+        if(is_array($x) && count($x) == 1)
+        {
+            $opr = [$x[0],"= "];
+
+            $field = [implode(" ",$opr) => $value];
         }
 
         foreach($field as $key => $val)
@@ -598,7 +607,7 @@ class Model extends Database
         {
             foreach($data as $key => $value)
             {
-                $set[$key] = $key . " = ?"; 
+                $set[$key] = $key . " ?"; 
             }
 
             $array_values = array_values(array_merge($data,$this->where));
@@ -606,12 +615,12 @@ class Model extends Database
 
         foreach($this->where as $key => $value)
         {
-            $where[] = $key . " = ?";
+            $where[] = $key . " ?";
         }
 
         $sql  = "UPDATE $table_name SET " . implode(",",$set);
         $sql .= " WHERE " . implode('',$where);
-
+        
         $this->num_rows = $this->run_query($sql,$array_values)->rowCount();
     }
 
@@ -652,7 +661,7 @@ class Model extends Database
      * 
      * @param  string $table_name table name to join
      * @param  string $condition  the join on condition
-     * @param  string $type       the join type left | right | outer
+     * @param  string $type       the join type left | right | outer | inner
      * @return array  $this->join
      */
     public function join($table_name,$condition,$type)

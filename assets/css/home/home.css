@@ -145,6 +145,39 @@ html {
     border: 1.5px solid white;
 }
 
+.offline_icon {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background-color: #acacac;
+    border-radius: 50%;
+    bottom: 0.2em;
+    right: 0.4em;
+    border: 1.5px solid white;
+}
+
+.outside_icon {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background-color: yellow;
+    border-radius: 50%;
+    bottom: 0.2em;
+    right: 0.4em;
+    border: 1.5px solid white;
+}
+
+.busy_icon {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background-color: #c23616;
+    border-radius: 50%;
+    bottom: 0.2em;
+    right: 0.4em;
+    border: 1.5px solid white;
+}
+
 .offline {
     background-color: #acacac !important;
 }

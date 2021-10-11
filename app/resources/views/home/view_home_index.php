@@ -40,21 +40,13 @@
                     </div>
                 </div>
                 <div class="card-body contacts_body">
-                    <ui class="contacts">
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Khalid</span>
-                                    <p>Kalid is online</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ui>
+                    <ul class="contacts">
+                        <div class="body-list-contact">
+                            
+                        </div>
+                    </ul>
                 </div>
+
                 <div class="card-footer"></div>
             </div>
         </div>

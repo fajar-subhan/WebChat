@@ -144,7 +144,7 @@ class M_Auth extends Model
         $this->db->where('a.user_active',1);
         $this->db->where('a.user_name',$username);
         $this->db->get();
-
+        // var_dump($this->db->last_query());die();
         if($this->db->num_rows() > 0)
         {
             $result = 

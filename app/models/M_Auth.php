@@ -197,4 +197,34 @@ class M_Auth extends Model
         
         return $count;
     }
+
+    /**
+     * This method is used to change the user's status bar
+     * 
+     * @return int $count 
+     */
+    public function _updateStatus($status)
+    {
+        $result = [];
+
+        $this->db->reset_select();
+        $this->db->set('user_status_online',$status);
+        $this->db->where('user_id',userdata('id'));
+        $this->db->update('mst_user');
+        if($this->db->num_rows() > 0)
+        {
+            $this->db->reset_select();
+            $this->db->select('b.status_name as status');
+            $this->db->from($this->table);
+            $this->db->join('ref_status_online b','a.user_status_online = b.status_code','inner');
+            $this->db->where('a.user_id',userdata('id'));
+            $this->db->get();
+            if($this->db->num_rows() > 0)
+            {
+                $result = $this->db->result_array()[0]['status'];
+            }
+        }
+
+        return $result;
+    }
 }

@@ -17,12 +17,12 @@
 
                                 <div class="user_info">
                                     <span><?php echo userdata('fullname'); ?></span>
-                                    <p><?php echo (userdata('login') == 1) ? 'online' : 'offline' ?></p>
+                                    <p id="status_name"><?php echo (userdata('login') == 1) ? 'online' : 'offline' ?></p>
 
                                     <div class="action_contact">
                                         <ul>
                                             <?php foreach (Status() as $key => $value) : ?>
-                                                <li class="select_status" id="<?php echo $key ?>">
+                                                <li class="select_status" id="<?php echo Encrypt($key) ?>">
                                                     <a>
                                                         <span class="status status-<?php echo strtolower($value) ?>"></span>
                                                         <?php echo $value; ?>

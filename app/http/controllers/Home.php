@@ -89,6 +89,7 @@ class Home extends Controller
     /**
      * This method is used to exit the application and delete the session
      * 
+     * @return json $result 
      */
     public function logout()
     {
@@ -106,6 +107,30 @@ class Home extends Controller
             /* Create log logout */
             EventLoger('Auth','Logout','User logout to app',userdata('id'));
 
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+
+    /**
+     * This method is used to change the user's status bar
+     * 
+     * Online | Offline | Outside | Busy Status
+     * 
+     *  @return json $result
+     */
+    public function status()
+    {
+        $result = ['status' => false,'data' => null];
+
+        $status = Decrypt(Post()->status);
+
+        $update_status = $this->M_Auth->_updateStatus($status);
+
+        if($update_status)
+        {
+            $result = ['status' => true,'data' => strtolower($update_status)];
         }
 
         header('Content-Type: application/json');

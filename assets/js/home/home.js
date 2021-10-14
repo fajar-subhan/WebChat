@@ -78,6 +78,40 @@ $("#logout").on('click',function()
 
 $('body').on('click','.select_status',function() 
 {
-    var status = $(this).val();
-    console.log('status >> ' ,status);
+    var status = $(this).attr('id');
+
+    $.ajax({
+        url      : 'home/status',
+        type     : 'post',
+        data     : { status : status },
+        dataType : 'json',
+        success  : function(xhr)
+        {
+            if(xhr.status)
+            {
+                var statusName = "";
+
+                switch(xhr.data)
+                {
+                    case 'online'  : 
+                        statusName = 'online';
+                    break;
+                    case 'offline' : 
+                        statusName = 'offline';
+                    break;
+                    case 'outside' : 
+                        statusName = 'outside';
+                    break;
+                    case 'busy'    : 
+                        statusName = 'busy';
+                    break;
+                }
+                
+                $("#profile_status").attr('class',xhr.data + '_icon');
+                $("#status_name").text(statusName);
+            }
+        }
+
+    })
+
 });

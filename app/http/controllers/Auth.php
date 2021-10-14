@@ -11,6 +11,7 @@ class Auth extends Controller
     {
         Controller::set_layout('template_auth');
         $this->M_Auth = $this->model('M_Auth');
+
     }
     
     /**
@@ -19,6 +20,12 @@ class Auth extends Controller
      */
     public function index()
     {
+
+        if(IsLogin())
+        {
+            header('location:home');
+        }
+
         $this->layoutView('auth/view_auth_index');
     }
     
@@ -119,9 +126,9 @@ class Auth extends Controller
         $result     = ['status' => false,'message' => 'Username or password do not match'];
         $username   = Post()->username;
         $password   = cek_cookie('password') ? Decrypt(base64_decode(Post()->password)) : base64_decode(Post()->password);
-
+        
         $user       = $this->M_Auth->_getDataByUsername($username);
-
+        
         if($user['status'])
         {
             /* If the password or username does not match the data in the database, then give an error message */
@@ -152,17 +159,17 @@ class Auth extends Controller
 
                 $session = 
                 [
-                    'username' => Encrypt($user['data']['username']),
-                    'password' => Encrypt($user['data']['password']),
+                    'fullname' => $user['data']['fullname'],
                     'id'       => $user['data']['id'],
-                    'login'    => 1
+                    'login'    => 1,
+                    'photo'    => $user['data']['photo']
                 ];  
 
                 /* Update some column in table mst_user when user login */
                 $this->M_Auth->_upadateLogin($user['data']['id']);
 
                 /* Create log login */
-                EventLoger('Auth','Login','User login to app',userdata('id'));
+                EventLoger('Auth','Login','User login to app',$user['data']['id']);
 
                 set_userdata($session);
             }

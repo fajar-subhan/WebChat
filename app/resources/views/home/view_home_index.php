@@ -5,31 +5,44 @@
             <div class="card mb-sm-3 mb-md-0 contacts_card">
                 <div class="card-header">
                     <!-- Contact Profile -->
-                    <ui class="contacts">
+                    <ul class="contacts">
                         <li>
                             <div class="d-flex bd-highlight">
                                 <div id="action_profile_btn">
-                                    <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
-
-                                    <span id="status_online"></span>
+                                    <div class="img_cont">
+                                        <img src="<?php echo BASE_URL ?>assets/images/contacts/<?php echo userdata('photo') ?>" class="rounded-circle user_img">
+                                        <span class="<?php echo (userdata('login') == 1) ? 'online_icon' : 'offline_icon'  ?>" id="profile_status"></span>
+                                    </div>
                                 </div>
 
                                 <div class="user_info">
-                                    <span>Khalid</span>
-                                    <p>Kalid is online</p>
+                                    <span><?php echo userdata('fullname'); ?></span>
+                                    <p><?php echo (userdata('login') == 1) ? 'online' : 'offline' ?></p>
 
                                     <div class="action_contact">
                                         <ul>
-                                            <li><span class="status status-online"></span> Online</li>
-                                            <li><span class="status status-offline"></span> Offline</li>
-                                            <li><span class="status status-outside"></span> Outside</li>
-                                            <li><span class="status status-busy"></span> Busy</li>
+                                            <?php foreach (Status() as $key => $value) : ?>
+                                                <li class="select_status" id="<?php echo $key ?>">
+                                                    <a>
+                                                        <span class="status status-<?php echo strtolower($value) ?>"></span>
+                                                        <?php echo $value; ?>
+                                                    </a>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+
+                                    <span id="action_menu_btn"><i class="fa fa-ellipsis-v"></i></span>
+                                    <div class="action_menu">
+                                        <ul>
+                                            <li><i class="fa fa-user-circle"></i> Profile</li>
+                                            <li id="logout" data-id="<?php echo userdata('id') ?>"><i class="fa fa-sign-out"></i> Logout</li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </li>
-                    </ui>
+                    </ul>
                     <div class="input-group">
                         <input type="text" placeholder="Search..." name="" class="form-control search">
                         <div class="input-group-prepend">
@@ -42,7 +55,7 @@
                 <div class="card-body contacts_body">
                     <ul class="contacts">
                         <div class="body-list-contact">
-                            
+
                         </div>
                     </ul>
                 </div>
@@ -69,14 +82,6 @@
                             <span><i class="fa fa-video-camera"></i></span>
                             <span><i class="fa fa-phone"></i></span>
                         </div>
-                    </div>
-                    <span id="action_menu_btn"><i class="fa fa-ellipsis-v"></i></span>
-                    <div class="action_menu">
-                        <ul>
-                            <li><i class="fa fa-user-circle"></i> View profile</li>
-                            <li><i class="fa fa-plus"></i> Add to group</li>
-                            <li><i class="fa fa-ban"></i> Block</li>
-                        </ul>
                     </div>
                 </div>
                 <div class="card-body msg_card_body">

@@ -376,6 +376,10 @@ if(!function_exists('userdata'))
         {
             return $_SESSION[$session];
         }
+        else 
+        {
+            return null;
+        }
     }
 }
 
@@ -429,5 +433,64 @@ if(!function_exists('cek_cookie'))
     function cek_cookie($index)
     {
         return empty($_COOKIE[$index]) ? false : true;
+    }
+}
+
+/**
+ * Check if the user is logged in or not
+ * If login is true
+ * If not logged in false
+ *  
+ *  @return boolean $login 
+ */
+if(!function_exists('IsLogin'))
+{
+    function IsLogin()
+    {
+        if(userdata('login') == 1)
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+}
+
+/**
+ * Taking online status
+ * 
+ * Online | Offline | Outside | Busy 
+ * 
+ * @return array $result 
+ */
+if(!function_exists('Status'))
+{
+    function Status()
+    {
+        $result = [];
+
+        $FS = new Model();
+        
+        $FS->reset_select();
+        $FS->select('
+        a.status_code as code,
+        a.status_name as name
+        ');
+        $FS->from('ref_status_online a');
+        $FS->where('a.status_active',1);
+        $FS->order_by('a.status_order','ASC');
+        $FS->get();
+
+        if($FS->num_rows() > 0)
+        {
+            foreach($FS->result_array() as $rows)
+            {
+                $result[$rows['code']] = $rows['name'];
+            }
+        }
+
+        return $result;
     }
 }

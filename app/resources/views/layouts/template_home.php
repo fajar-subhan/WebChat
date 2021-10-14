@@ -29,13 +29,8 @@
     <script src="<?php echo BASE_URL ?>assets/js/home/home.js"></script>
     <!--===============================================================================================-->
     <script src="<?php echo BASE_URL ?>assets/vendor/emojionearea/dist/emojionearea.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="<?php echo BASE_URL ?>assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
 </body>
 
 </html>
-
-<script>
-    $("#message").emojioneArea({
-        pickerPosition : "top",
-        tonesStyle     : "bullet"
-    })
-</script>

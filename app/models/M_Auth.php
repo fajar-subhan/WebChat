@@ -138,7 +138,8 @@ class M_Auth extends Model
         a.user_id as id,
         a.user_full_name as fullname,
         a.user_name as username,
-        a.user_password as `password`
+        a.user_password as `password`,
+        a.user_photo as photo
         ');
         $this->db->from('mst_user a');
         $this->db->where('a.user_active',1);
@@ -160,7 +161,8 @@ class M_Auth extends Model
     /**
      *  Update some column in table mst_user when user login
      * 
-     * 
+     * @param int $id
+     * @return void
      */
     public function _upadateLogin($id)
     {
@@ -168,7 +170,31 @@ class M_Auth extends Model
         $this->db->set('user_ip_address',GetIP());
         $this->db->set('user_last_login_date',date('Y-m-d H:i:s'));
         $this->db->set('user_login_status',1);
+        $this->db->set('user_status_online','01');
         $this->db->where('user_id',$id);
         $this->db->update('mst_user');
+    }
+
+    /**
+     *  Update some column in table mst_user when user logout
+     * 
+     * @param int $id
+     * @return void
+     */
+    public function _upadateLogout($id)
+    {
+        $count = 0;
+        $this->db->reset_select();
+        $this->db->set('user_ip_address',null);
+        $this->db->set('user_status_online','02');
+        $this->db->set('user_login_status',0);
+        $this->db->where('user_id',$id);
+        $this->db->update('mst_user');
+        if($this->db->num_rows() > 0)
+        {
+            $count++;
+        }
+        
+        return $count;
     }
 }

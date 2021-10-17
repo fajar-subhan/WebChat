@@ -494,3 +494,79 @@ if(!function_exists('Status'))
         return $result;
     }
 }
+
+/**
+ * Retrieve user profile data based on 
+ * session user id who is currently logged in
+ * 
+ * @param int $user_id
+ * @return array $result
+ */
+if(!function_exists('GetProfile'))
+{
+    function GetProfile($user_id)
+    {
+
+        $result = [];
+
+        $FS = new Model();
+
+        $FS->reset_select();
+        $FS->select('
+        a.user_full_name as fullname,
+        a.user_name as username,
+        a.user_photo as photo,
+        a.user_status_online as online,
+        b.status_name');
+        $FS->from('mst_user a');
+        $FS->join('ref_status_online b','b.status_code = a.user_status_online','inner');
+        $FS->where('a.user_active',1);
+        $FS->where('a.user_id',$user_id);
+        $FS->get();
+
+        if($FS->num_rows() > 0)
+        {
+            foreach($FS->result_array() as $rows)
+            {
+                $result          = $rows;
+                $result['photo'] = Encrypt($rows['photo']);
+            }
+        }
+
+        return $result;
+    }
+}
+
+/**
+ * To provide a contact profile status icon in the 
+ * css class based on the session user id
+ * 
+ * online_icon | offline_icon | outside_icon | busy_icon
+ * 
+ * @param int $online status user online
+ */
+if(!function_exists('StatusIcon'))
+{
+    function StatusIcon($online)
+    {
+        $result = "";
+
+        switch($online)
+        {
+            case 01 : 
+                $result = "online_icon";
+            break;
+            case 02 : 
+                $result = "offline_icon";
+            break;
+            case 03 : 
+                $result = "outside_icon";
+            break;
+            case 04 : 
+                $result = "busy_icon";
+            break;
+        }
+
+        return $result;
+    }
+}

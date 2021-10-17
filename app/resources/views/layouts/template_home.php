@@ -15,6 +15,12 @@
     <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/css/home/home.css">
     <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/vendor/emojionearea/dist/emojionearea.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/css/auth/util.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/css/auth/main.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL ?>assets/fonts/iconic/css/material-design-iconic-font.min.css">
 
 </head>
 

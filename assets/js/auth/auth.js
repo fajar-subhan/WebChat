@@ -73,11 +73,8 @@ $(document).ready(function()
                 {
                     if(xhr.status)
                     {
-                        swal.fire({
-                            icon  : 'info',
-                            title : 'Failed',
-                            text  : xhr.message,
-                        });
+                        message = "Username already used";
+                        validation(message,'#username_error');
 
                         error++;
                     }

@@ -227,4 +227,5 @@ class M_Auth extends Model
 
         return $result;
     }
+    
 }

@@ -125,8 +125,25 @@ class Auth extends Controller
     {
         $result     = ['status' => false,'message' => 'Username or password do not match'];
         $username   = Post()->username;
-        $password   = cek_cookie('password') ? Decrypt(base64_decode(Post()->password)) : base64_decode(Post()->password);
-        
+
+        // var_dump(Decrypt(base64_decode(Post()->password)));die();   benar fix 
+
+        if
+        (
+            Decrypt(get_cookie('password')) == Decrypt(base64_decode(Post()->password)) 
+        )
+        {
+            $password = Decrypt(base64_decode(Post()->password));
+        }
+        else if(Decrypt(get_cookie('password')) == base64_decode(Post()->password))
+        {
+            $password = base64_decode(Post()->password);
+        }
+        else
+        {
+            $password = base64_decode(Post()->password);
+        }
+    
         $user       = $this->M_Auth->_getDataByUsername($username);
         
         if($user['status'])
@@ -162,7 +179,6 @@ class Auth extends Controller
                     'fullname' => $user['data']['fullname'],
                     'id'       => $user['data']['id'],
                     'login'    => 1,
-                    'photo'    => $user['data']['photo']
                 ];  
 
                 /* Update some column in table mst_user when user login */

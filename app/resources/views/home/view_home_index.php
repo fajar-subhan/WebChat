@@ -10,14 +10,15 @@
                             <div class="d-flex bd-highlight">
                                 <div id="action_profile_btn">
                                     <div class="img_cont">
-                                        <img src="<?php echo BASE_URL ?>assets/images/contacts/<?php echo userdata('photo') ?>" class="rounded-circle user_img">
-                                        <span class="<?php echo (userdata('login') == 1) ? 'online_icon' : 'offline_icon'  ?>" id="profile_status"></span>
+                                        <img id="profile_img" src="<?php echo BASE_URL ?>assets/images/contacts/<?php echo Decrypt(GetProfile(userdata('id'))['photo']); ?>" class="rounded-circle user_img">
+
+                                        <span class="<?php echo StatusIcon(GetProfile(userdata('id'))['online']) ?>" id="profile_status"></span>
                                     </div>
                                 </div>
 
                                 <div class="user_info">
-                                    <span><?php echo userdata('fullname'); ?></span>
-                                    <p id="status_name"><?php echo (userdata('login') == 1) ? 'online' : 'offline' ?></p>
+                                    <span><?php echo  GetProfile(userdata('id'))['fullname']; ?></span>
+                                    <p id="status_name"><?php echo strtolower(GetProfile(userdata('id'))['status_name']); ?></p>
 
                                     <div class="action_contact">
                                         <ul>
@@ -35,8 +36,12 @@
                                     <span id="action_menu_btn"><i class="fa fa-ellipsis-v"></i></span>
                                     <div class="action_menu">
                                         <ul>
-                                            <li><i class="fa fa-user-circle"></i> Profile</li>
-                                            <li id="logout" data-id="<?php echo userdata('id') ?>"><i class="fa fa-sign-out"></i> Logout</li>
+                                            <li id="profile" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="<?php echo Encrypt(userdata('id')) ?>">
+                                                <i class="fa fa-user-circle"></i> Profile
+                                            </li>
+                                            <li id="logout" data-id="<?php echo Encrypt(userdata('id')) ?>">
+                                                <i class="fa fa-sign-out"></i> Logout
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -77,10 +82,6 @@
                         <div class="user_info">
                             <span>Chat with Khalid</span>
                             <p>1767 Messages</p>
-                        </div>
-                        <div class="video_cam">
-                            <span><i class="fa fa-video-camera"></i></span>
-                            <span><i class="fa fa-phone"></i></span>
                         </div>
                     </div>
                 </div>
@@ -158,12 +159,76 @@
                         <div class="input-group-append">
                             <label for="file_send">
                                 <span class="input-group-text file_span" id="file_send"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>
-                            </label> -->
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- <============== Start chat on the right ===================> -->
+    </div>
+</div>
+
+<!-- Start modal profile -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user-circle"></i> Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="limiter">
+                    <div class="container-login100">
+                        <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+                            <form action="#" data-id="" class="login100-form validate-form" id="form_edit_profile" onsubmit="updateProfile(event)">
+                                <input type="hidden" id="prev_photo" value="">
+
+                                <div class="wrap-input100 m-b-23" id="fullname_error" data-validate="">
+                                    <span class="label-input100">Fullname</span>
+                                    <input class="input100" type="text" id="fullname" name="fullname" placeholder="Type your new fullname">
+                                    <span class="focus-input100" data-symbol="&#xf206;"></span>
+                                </div>
+
+                                <div class="wrap-input100 m-b-23" id="username_error" data-validate="">
+                                    <span class="label-input100">Username</span>
+                                    <input class="input100" type="text" id="username" name="username" placeholder="Type your new username">
+                                    <span class="focus-input100" data-symbol="&#xf206;"></span>
+                                </div>
+
+                                <div class="wrap-input100 m-b-23" id="photo_error" data-validate="">
+                                    <span class="label-input100">Photo</span>
+                                    <input type="file" name="photo" id="photo">
+                                    <small class="text-muted">You can only upload in jpg, jpeg, png formats</small>
+                                </div>
+
+                                <div class="wrap-input100 m-b-23" id="password_error" data-validate="">
+                                    <span class="label-input100">Password</span>
+                                    <input class="input100" type="password" id="password" name="password" placeholder="Type your new password">
+                                    <span class="focus-input100" data-symbol="&#xf190;"></span>
+                                </div>
+
+                                <div class="text-right p-t-8 p-b-31">
+                                </div>
+
+                                <div class="container-login100-form-btn">
+                                    <div class="wrap-login100-form-btn">
+                                        <div class="login100-form-bgbtn"></div>
+                                        <button class="login100-form-btn" type="submit">
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="text-right p-t-8 p-b-31">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dropDownSelect1"></div>
+            </div>
+        </div>
     </div>
 </div>

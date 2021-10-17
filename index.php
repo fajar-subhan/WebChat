@@ -25,6 +25,7 @@ require_once './app/config/config.php';
 |
 */
 if(!defined('ROOT_PATH')) define('ROOT_PATH',dirname(__FILE__)); 
+if(!defined('ASSETS_IMAGES')) define('ASSETS_IMAGES', 'assets/images/');
 
 /*
 |--------------------------------------------------------------------------

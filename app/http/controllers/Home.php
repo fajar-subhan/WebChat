@@ -96,7 +96,7 @@ class Home extends Controller
         $result = ['status' => false,'url' => null];
 
         /* Update some column in table mst_user when user login */
-        $update_logout = $this->M_Auth->_upadateLogout(Post()->id);
+        $update_logout = $this->M_Auth->_upadateLogout(Decrypt(Post()->id));
 
         if($update_logout)
         {
@@ -133,6 +133,136 @@ class Home extends Controller
             $result = ['status' => true,'data' => strtolower($update_status)];
         }
 
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+
+    /**
+     * This is used to retrieve form data when the profile button is clicked
+     * 
+     * @return json
+     */
+    public function getDataProfile()
+    {
+        $result  = ['status' => false,'data' => null];
+
+        $id      = Decrypt(Post()->id);
+
+        $profile = $this->M_Home->_getDataProfile($id);
+
+        if($profile)
+        {
+            $result = ['status' => true,'data' => $profile];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+
+    /**
+     * Update the profile data of each member user based on their id
+     * 
+     * @return json $result 
+     */
+    public function updateProfile()
+    {
+        $result = ['status' => false,'message' => 'Data failed to update'];
+
+        if(!empty($_FILES['photo']))
+        {
+            /* Allowed extensions : jpg | png */
+            $allowed_extension = ['jpg','png'];
+
+            $filename    = str_replace(['.jpg','.png'],'',$_FILES['photo']['name'] . "_" . md5(date('YmdHis')));
+            $extension   = pathinfo($_FILES['photo']['name'],PATHINFO_EXTENSION);
+            $output_name = urlencode($filename . '.' . $extension);
+
+            $file_size   = $_FILES['photo']['size'];
+            $file_tmp    = $_FILES['photo']['tmp_name'];
+
+            /* If there is a file extension is allowed */
+            if(in_array($extension,$allowed_extension) == true)
+            {
+                /* Set the maximum uploaded file size to 1mb */
+                if($file_size < 1000000)
+                {
+                    move_uploaded_file($file_tmp,'assets/images/contacts/' . $output_name);
+
+                    $upload = $this->M_Home->_updateProfile($output_name);
+                    
+                    if($upload)
+                    {
+                        $result = 
+                        [
+                            'status'    => true,
+                            'message'   => 'Data updated successfully'
+                        ];
+
+                        /**
+                         * If it is successfully updated, first delete the photo 
+                         * that was previously on the server so that it doesn't 
+                         * accommodate a lot of the previous photo
+                         * 
+                         */
+                        if(!empty(Decrypt(Post()->prevPhoto)))
+                        {
+                            /**
+                             * Check if the previous photo file exists, 
+                             * if there is then delete the photo first
+                             * 
+                             */
+                            if(file_exists(ASSETS_IMAGES . 'contacts/' . Decrypt(Post()->prevPhoto)) && (Decrypt(Post()->prevPhoto) != 'default.jpg'))
+                            {
+                                $path = ASSETS_IMAGES . 'contacts/' . Decrypt(Post()->prevPhoto);
+
+                                /* Remove previous photo file */
+                                unlink($path);
+                            }
+                        }
+                    }
+                }
+                else 
+                {
+                    $result = ['status' => false,'message' => 'Maximum upload file 1 mb'];
+                }
+            }
+            else 
+            {
+                $result = ['status' => false,'message' => 'Invalid file format'];
+            }
+        }
+        else 
+        {
+            $upload = $this->M_Home->_updateProfile();
+
+            if($upload)
+            {
+                $result = ['status' => true,'message' => 'Data updated successfully'];
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+
+    /**
+     * Check if the username is already in use by another user before updating.
+     * If the username is the same as the previous username then allow it but 
+     * if it is the same as the existing one then reject it before updating
+     * 
+     * @return array $result
+     */
+    public function check_username_update()
+    {
+        $result = ['status' => false,'message' => null];
+        
+        $check_username_update = $this->M_Home->_checkUsernameUpdate();
+
+        if($check_username_update)
+        {
+            $result = ['status' => true,'message' => 'Username already used'];
+        }
+    
         header('Content-Type: application/json');
         echo json_encode($result);
     }

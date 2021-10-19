@@ -405,4 +405,13 @@ html {
     background: url('https://cdn1.iconfinder.com/data/icons/hawcons/32/698394-icon-130-cloud-upload-512.png') center center no-repeat #e4e4e4;
     border-radius: 20px;
     background-size: 60px 60px;
-  }
+}
+
+/** <======================= List contact ====================================> **/
+.list-contact {
+    cursor: pointer;
+}
+
+.list-contact:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}

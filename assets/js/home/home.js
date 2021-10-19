@@ -309,3 +309,54 @@ function validation(message,selectorerror)
         $(selectorerror).removeClass('validate-input alert-validate');
     }
 }
+
+/**
+ * When the contact list is clicked or selected
+ * 
+ */
+$('body').on('click','.list-contact',function(e)
+{
+    var id = $(this).attr('id');
+
+    var data = { id : id };
+    
+    /**
+     * This is useful for displaying the chat only
+     * 
+     */
+    $.ajax({
+        url     : 'home/showChat',
+        data    : data,
+        type    : 'post',
+        dataType: 'json',
+        success : function(xhr)
+        {
+            if(xhr.status)
+            {
+                $(".msg_card_body").html(xhr.content);
+            }
+            else 
+            {
+                $(".msg_card_body").html("");
+            }
+        }  
+    });
+
+    /**
+     * To display profile photos and chat friends icon status
+     * 
+     */
+    $.ajax({
+        url     : 'home/profileFriends',
+        data    : data,
+        type    : 'post',
+        dataType: 'json',
+        success : function(xhr)
+        {
+            if(xhr.status)
+            {
+                $(".msg_head").html(xhr.content);
+            }
+        }
+    })
+});

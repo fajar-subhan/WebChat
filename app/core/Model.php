@@ -103,6 +103,22 @@ class Model extends Database
      */
     private $order_by;
 
+    /**
+     * To submit a query sql
+     * 
+     * @var object $query
+     */
+    private $query;
+
+    /**
+     * 
+     * Query result. "object" version
+     * 
+     * @var object $result_object
+     */
+    private $result_object;
+
+
     public function __construct()
     {
         $this->conn = parent::__construct();
@@ -372,7 +388,14 @@ class Model extends Database
      */
     public function result_array()
     {
-        $this->result_array = $this->run_select()->fetchAll(PDO::FETCH_ASSOC);
+        if(is_object($this->query))
+        {
+            $this->result_array = $this->query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        else 
+        {
+            $this->result_array = $this->run_select()->fetchAll(PDO::FETCH_ASSOC);
+        }
 
         return $this->result_array;
     }
@@ -424,7 +447,14 @@ class Model extends Database
      */
     public function last_query()
     {
-        return $this->run_select()->queryString;
+        if(is_object($this->query))
+        {
+            return $this->query->queryString;
+        }
+        else 
+        {       
+            return $this->run_select()->queryString;
+        }
     }
 
     /**
@@ -449,7 +479,16 @@ class Model extends Database
      */
     public function result_object()
     {
-        return (object)$this->run_select()->fetchAll(PDO::FETCH_OBJ);
+        if(is_object($this->query))
+        {   
+            $this->result_object = $this->query->fetchAll(PDO::FETCH_OBJ);
+        }
+        else 
+        {
+            $this->result_object = $this->run_select()->fetchAll(PDO::FETCH_OBJ);
+        }
+
+        return $this->result_object;
     }
 
     /**
@@ -729,10 +768,11 @@ class Model extends Database
     public function reset_select()
     {
         $data = array(
-            $this->where    = array(),
-            $this->where_in = array(),
-            $this->order_by = "",
-            $this->limit    = ""
+            $this->where        = array(),
+            $this->where_in     = array(),
+            $this->order_by     = "",
+            $this->limit        = "",
+            $this->field_select = array()
         );
 
         foreach($data as $key => $value)
@@ -740,4 +780,54 @@ class Model extends Database
             $this->$key =$value;
         }
     }
+
+    /**
+     * This method returns a single result row. If your query has more than one row, 
+     * it returns only the first row. The result is returned as an object. 
+     * 
+     * @return object 
+     */
+    public function row()
+    {
+        return $this->result_object()[0];
+    }
+
+    /**
+     * This function is used to run the query
+     * 
+     * @param string $query
+     * @param array  $bindValue
+     */
+    public function query($query,$bindValue = [])
+    {
+        try 
+        {
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute($bindValue);
+            $this->num_rows = $stmt->rowCount();
+            
+            $this->query = $stmt;
+
+            return $this->query;
+        }
+        catch(PDOException $e)
+        {
+            BaseException::getException($e);
+        }
+    }
+
+    public function result_array_one()
+    {
+        if(is_object($this->query))
+        {
+            $this->result_array = $this->query->fetch(PDO::FETCH_ASSOC);
+        }
+        else 
+        {
+            $this->result_array = $this->run_select()->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return $this->result_array;
+    }
+    
 }

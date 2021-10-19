@@ -75,7 +75,7 @@ class Home extends Controller
                     break;
                 }
 
-                $data .= '<li> <div class="d-flex bd-highlight" id="'.Encrypt($val['id']).'"> <div class="img_cont"> <img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> <span class="'.$icon.'"></span> </div><div class="user_info"> <span>'.$val['fullname'].'</span> <p>Kalid is '.strtolower($val['stts_online']).'</p></div></div></li>';
+                $data .= '<li class="list-contact" id="'.Encrypt($val['id']).'"> <div class="d-flex bd-highlight"> <div class="img_cont"> <img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> <span class="'.$icon.'"></span> </div><div class="user_info"> <span>'.$val['fullname'].'</span> <p>Kalid is '.strtolower($val['stts_online']).'</p></div></div></li>';
             }
 
             $result = ['status' => true,'data' => $data];
@@ -250,7 +250,7 @@ class Home extends Controller
      * If the username is the same as the previous username then allow it but 
      * if it is the same as the existing one then reject it before updating
      * 
-     * @return array $result
+     * @return json $result
      */
     public function check_username_update()
     {
@@ -263,6 +263,83 @@ class Home extends Controller
             $result = ['status' => true,'message' => 'Username already used'];
         }
     
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+    
+    /**
+     * This method is useful for displaying chat content
+     * 
+     * @return json $result
+     */
+    public function showChat()
+    {
+        $result = ['status' => false,'content' => null];
+
+        $show_chat = $this->M_Home->_showChat();
+        
+        if($show_chat)
+        {
+            $result = "";
+
+            foreach($show_chat as $rows)
+            {                            
+                $color      = $rows['sender_id'] == userdata('id') ?  'msg_cotainer' : 'msg_cotainer_send';
+                $images     =  ASSETS_IMAGES . 'contacts/' . $rows['photo'];
+                $position   = $rows['sender_id'] == userdata('id') ? 'justify-content-end' : 'justify-content-start';
+                $date       = date('H:i:s D',strtotime($rows['chat_date']));
+
+                $result .= ' <div class="d-flex '. $position .' mb-4"> <div class="'. $color .'"> '.$rows['content'].' <span class="msg_time_send">'.$date.'</span> </div><div class="img_cont_msg"> <img src="'. $images . '" class="rounded-circle user_img_msg"> </div></div>';
+            }
+
+
+            $result = ['status' => true,'content' => $result];
+
+        }   
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+    
+    /**
+     * This method used to display profile photos of chat friends
+     * 
+     * @return json $result
+     */
+    public function profileFriends()
+    {
+        $result = ['status' => false,'content' => null];
+
+        $profile_friends = $this->M_Home->_profileFriends();
+    
+        if($profile_friends)
+        {
+            $images     =  ASSETS_IMAGES . 'contacts/' . $profile_friends['photo'];
+            
+            switch($profile_friends['stts_online'])
+                {
+                    case 'Online'   : 
+                        $icon = 'online_icon';
+                    break;
+
+                    case 'Offline'  : 
+                        $icon = 'offline_icon';
+                    break;
+
+                    case  'Outside' : 
+                        $icon = 'outside_icon';
+                    break;
+
+                    case 'Busy'     : 
+                        $icon = 'busy_icon';
+                    break;
+                }
+
+            $content = ' <div class="d-flex bd-highlight"> <div class="img_cont"> <img src="'.$images.'" class="rounded-circle user_img"> <span class="'.$icon.'"></span> </div><div class="user_info"> <span>'.$profile_friends['fullname'].'</span> <p>'.$profile_friends['stts_online'].'</p></div></div>';
+
+            $result = ['status' => true,'content' => $content];
+        }
+
         header('Content-Type: application/json');
         echo json_encode($result);
     }

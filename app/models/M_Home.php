@@ -163,4 +163,86 @@ class M_Home extends Model
 
         return $count;
     }
+
+    /**
+     * This method is useful for displaying charts based 
+     * on sender id and recipient id maybe vice versa
+     * 
+     * @return array $result
+     */
+    public function _showChat()
+    {
+        $result = [];
+
+        /**
+         * This comes from the id belonging to each contact list.
+         * Which comes from mst_user.user_id
+         * 
+         * @var string $id
+         */
+        $contactID = Decrypt(Post()->id);
+
+        /**
+         * This comes from my session id when logging in
+         * 
+         * @var string $id
+         */
+        $myID = userdata('id');
+
+        $sql = "SELECT 
+        a.chat_id,
+        a.chat_sender_id as sender_id,
+        a.chat_receive_id as receive_id,
+        a.chat_content as content,
+        a.chat_read as chat_read,
+        a.chat_type,
+        a.chat_created_at as chat_date,
+        b.user_photo as photo
+        FROM mst_chat a 
+        INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
+        WHERE 
+        (a.chat_sender_id = ? AND a.chat_receive_id = ?) 
+        OR (a.chat_sender_id = ? AND a.chat_receive_id = ?);
+        ";
+
+        $this->db->query($sql,[$contactID,$myID,$myID,$contactID]);
+        
+        if($this->db->num_rows() > 0)
+        {
+            while($x = $this->db->result_array())
+            {
+                $result = $x;
+            }
+        } 
+
+        return $result;
+    }
+
+    /**
+     * To display profile photos and chat friends icon status
+     * 
+     * @return array $result 
+     */
+    public function _profileFriends()
+    {
+        $result = [];
+
+        $this->db->reset_select();
+        $this->db->select('
+        a.user_full_name as fullname,
+        b.status_name as stts_online,
+        a.user_photo as photo');
+        $this->db->from('mst_user a');
+        $this->db->join('ref_status_online b','b.status_code = a.user_status_online','inner');
+        $this->db->where('a.user_id',Decrypt(Post()->id));
+        $this->db->where('a.user_active',1);
+        $this->db->get();
+
+        if($this->db->num_rows() > 0)
+        {
+            $result = $this->db->result_array_one();
+        }
+
+        return $result;
+    }   
 }

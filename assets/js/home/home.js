@@ -11,6 +11,53 @@ $(document).ready(function () {
     $(".card-footer").hide();
 
     /**
+     * Sending images files
+     * 
+     */
+    $("#file_image").on('change',function()
+    {
+        if($(this)[0].files.length > 0)
+        {
+            var photo = $(this)[0].files[0];
+        }
+        else 
+        {
+            var photo = "";
+        }
+
+        var fd          = new FormData();
+        var friendsID   = $('.friends').attr('id');
+        
+        fd.append('photo',photo);
+        fd.append('friendsID',friendsID);
+
+        $.ajax({
+            url         : 'home/uploadImage',
+            type        : 'post',
+            dataType    : 'json',
+            data        : fd,
+            contentType : false,
+            processData : false,
+            success     : function(xhr)
+            {
+                if(xhr.status)
+                {
+                    $(this).val('');
+                }
+                else 
+                {
+                    swal.fire({
+                        icon  : 'error',
+                        title : 'Failed',
+                        text  : xhr.message
+                    });
+                }
+            }
+        })
+    });
+
+
+    /**
      * This is for the contact list section on the left
      *
      */

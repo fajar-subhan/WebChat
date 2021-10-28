@@ -6,3 +6,7 @@
 
 # Helpers
 Security.ini
+
+# Chat image 
+assets/images/chat/*.jpg
+assets/images/chat/*.png

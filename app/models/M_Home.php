@@ -197,7 +197,7 @@ class M_Home extends Model
         a.chat_read as chat_read,
         a.chat_type,
         a.chat_created_at as chat_date,
-        b.user_photo as photo
+        b.user_photo as photos
         FROM {$this->table} 
         INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
         WHERE 
@@ -499,5 +499,45 @@ class M_Home extends Model
         $this->db->reset_select();
         $this->db->where('typing_sender_id',userdata('id'));
         $this->db->delete('mst_typing');
+    }
+
+    /**
+     * Send a photo in the message sent by the user
+     * 
+     * @return string $filename
+     */
+    public function _uploadImage($filename)
+    {
+        $count = 0;
+
+        /**
+         * This comes from my session id when logging in
+         * 
+         * @var string $id
+         */
+        $myID = userdata('id');
+
+        /**
+         * This comes from the id belonging to each contact list.
+         * Which comes from mst_user.user_id
+         * 
+         * @var string $id
+         */
+        $friendsID = Decrypt(Post()->friendsID);
+
+        $this->db->set('chat_sender_id',$myID);
+        $this->db->set('chat_receive_id',$friendsID);
+        $this->db->set('chat_content',$filename);
+        $this->db->set('chat_read',0);
+        $this->db->set('chat_type','image');
+        $this->db->set('chat_created_at',date('Y-m-d H:i:s'));
+        $this->db->insert('mst_chat');
+
+        if($this->db->num_rows() > 0)
+        {
+            $count++;
+        }
+
+        return $count;
     }
 }

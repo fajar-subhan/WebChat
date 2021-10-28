@@ -406,13 +406,25 @@ class Home extends Controller
             $this->M_Home->_ChatRead($contactID,$myID);
 
             foreach($show_chat as $rows)
-            {                            
+            {           
                 $color      = $rows['sender_id'] == userdata('id') ?  'msg_cotainer' : 'msg_cotainer_send';
-                $images     =  ASSETS_IMAGES . 'contacts/' . $rows['photo'];
+                $images     = ASSETS_IMAGES . 'contacts/' . $rows['photos'];
                 $position   = $rows['sender_id'] == userdata('id') ? 'justify-content-end' : 'justify-content-start';
                 $date       = date('H:i',strtotime($rows['chat_date']));
+                
+                switch ($rows['chat_type'])
+                {
+                    case 'text'  : 
+                        $content = $rows['content'];
+                    break;
 
-                $result .= ' <div class="d-flex '. $position .' mb-4"> <div class="'. $color .'"> '.$rows['content'].' <span class="msg_time_send">'.$date.'</span> </div><div class="img_cont_msg"> <img src="'. $images . '" class="rounded-circle user_img_msg"> </div></div>';
+                    case 'image' :
+                        $path    = ASSETS_IMAGES . 'chat/' . $rows['content'];
+                        $content = '<img style="width:100%" height="200" src="'.$path.'">'; 
+                    break;
+                }
+
+                $result .= ' <div class="d-flex '. $position .' mb-4"> <div class="'. $color .'"> '.$content.' <span class="msg_time_send">'.$date.'</span> </div><div class="img_cont_msg"> <img src="'. $images . '" class="rounded-circle user_img_msg"> </div></div>';
             }
 
 
@@ -587,5 +599,56 @@ class Home extends Controller
     public function deleteTyping()
     {
         $this->M_Home->_deleteTyping();
+    }
+
+    /**
+     * Send a picture message
+     * 
+     */
+    public function uploadImage()
+    {
+        $result = ['status' => 0,'message' => 'Image failed to send'];
+
+        if(!empty($_FILES['photo']))  
+        {
+            /* Allowed extensions : jpg | png */
+            $allowed_extension = ['jpg','png'];
+            
+            /* Extension */
+            $extension      = pathinfo($_FILES['photo']['name'],PATHINFO_EXTENSION);
+            
+            $filename       = "images_" . md5(date('Y-m-d H:i:s')) . '.' . $extension;
+
+            $file_size      = $_FILES['photo']['size'];
+            $file_tmp       = $_FILES['photo']['tmp_name'];
+
+            /* If there is a file extension is allowed */
+            if(in_array($extension,$allowed_extension) == true)
+            {
+                /* Set the maximum uploaded file to 1mb */
+                if($file_size < 1000000)
+                {
+                    move_uploaded_file($file_tmp,'assets/images/chat/' . $filename );
+
+                    $upload = $this->M_Home->_uploadImage($filename);
+
+                    if($upload)
+                    {
+                        $result = [ 'status' => 1];
+                    }
+                }
+                else 
+                {
+                    $result = ['status' => 0,'message' => 'Maximum upload file 1 mb'];
+                }
+            }
+            else 
+            {
+                $result = ['status' => 0,'message' => 'Invalid file format'];
+            }
+        }  
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
     }
 }

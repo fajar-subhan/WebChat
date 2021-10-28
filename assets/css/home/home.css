@@ -43,7 +43,7 @@ html {
 }
 
 .search {
-    border-radius: 15px 0 0 15px !important;
+    border-radius: 15px 15px 15px 15px !important;
     background-color: rgba(0, 0, 0, 0.3) !important;
     border: 0 !important;
     color: white !important;
@@ -59,6 +59,7 @@ html {
     border: 0 !important;
     color: white !important;
     height: 50px !important;
+    font-size: 12px;
     /* overflow-y: auto; */
     border-radius: 5px !important;
     margin-left: 5px !important;
@@ -194,13 +195,57 @@ html {
 }
 
 .user_info p {
-    font-size: 10px;
+    font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
+}
+
+.user_info_username {
+    font-size: 14px !important;
+    position: absolute;
+    top: 20%;
+}
+
+.user_info_time {
+    position: absolute;
+    margin-left: 80%;
+    margin-top: 7%;
 }
 
 .video_cam {
     margin-left: 50px;
     margin-top: 5px;
+}
+
+.last_message {
+    color: #ffffffa4 !important;
+    font-size: 10px !important;
+    position: absolute;
+    top:57%;
+}
+
+.time-meta {
+    text-align: right;
+    font-size: 12px !important;
+    margin-left: -10% !important;
+    color: #ffffffa4 !important;
+    vertical-align: baseline;
+    bottom: 40%;
+    position: absolute;
+    left: 96%;
+    top: 20%;
+}
+
+
+@media(max-width: 576px) {
+    .time-meta {
+        text-align: right;
+        font-size: 12px;
+        margin-left: -10% !important;
+        color: #ffffffa4;
+        vertical-align: baseline;
+        position: absolute;
+        bottom: 40%;
+    }
 }
 
 .video_cam span {
@@ -369,7 +414,7 @@ html {
 }
 
 .status-busy {
-    background-color: #c23616 ;
+    background-color: #c23616;
 }
 
 /** <======================= File Upload / File Image ====================================> **/
@@ -386,7 +431,7 @@ html {
 }
 
 .file_span:hover {
-    transform : rotate(360deg);
+    transform: rotate(360deg);
 }
 
 .file {
@@ -410,8 +455,27 @@ html {
 /** <======================= List contact ====================================> **/
 .list-contact {
     cursor: pointer;
+    position: relative;
 }
 
 .list-contact:hover {
     background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+.badge {
+    display: inline-block;
+    font-size: 60% !important;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+}
+
+.badge-success {
+    background-color: #28a745;
+    position: absolute;
+    right: 7%;
 }

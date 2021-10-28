@@ -118,6 +118,13 @@ class Model extends Database
      */
     private $result_object;
 
+    /**
+     * Generate LIKE clause
+     * 
+     * @var array $like
+     */
+    private $like;
+
 
     public function __construct()
     {
@@ -319,6 +326,48 @@ class Model extends Database
          * End Where IN
          */
 
+        // --------------------------------------------------------------------------------
+        
+        /**
+         * Start LIKE
+         */
+        if(!empty($this->like))
+        {
+            if(!empty($this->where))
+            {
+                $sql .= " AND ";
+            }
+
+            if(count($this->like) === 1)
+            {
+                
+                foreach($this->like as $field => $value)
+                {
+                    $like[] = $field . "LIKE '%$value%'";
+                }
+
+                
+                $sql .= implode(" ",$like);
+            }
+            
+            if(count($this->like) > 1)
+            {
+                
+                foreach($this->like as $key => $value)
+                {
+                    $like[]  = $key . "LIKE '%$value%'";
+                }
+
+                $sql .= implode(" AND ",$like);
+            }
+        }
+
+        /**
+         * End LIKE
+         */
+
+         // --------------------------------------------------------------------------------
+        
         /**
          * Start Order By
          */
@@ -423,7 +472,7 @@ class Model extends Database
                 $this->field_select[] = $val;
             }
         }
-
+        
         return $this->field_select;
 
     }
@@ -602,7 +651,6 @@ class Model extends Database
             $stmt = $this->conn->prepare($query);
             $stmt->execute($bindValue);
             $this->num_rows = $stmt->rowCount();
-            
             return $stmt;
         }
         catch(PDOException $e)
@@ -658,7 +706,7 @@ class Model extends Database
         }
 
         $sql  = "UPDATE $table_name SET " . implode(",",$set);
-        $sql .= " WHERE " . implode('',$where);
+        $sql .= " WHERE " . implode(' AND ',$where);
 
         $this->num_rows = $this->run_query($sql,$array_values)->rowCount();
     }
@@ -675,7 +723,7 @@ class Model extends Database
         {
             foreach($this->where as $key => $value)
             {
-                $set[$key] = $key . " = ?";
+                $set[$key] = $key . "?";
             }
 
             $array_values = array_values($this->where);
@@ -684,7 +732,7 @@ class Model extends Database
         {
             foreach($data as $key => $value)
             {
-                $set[$key] = $key . " = ?";
+                $set[$key] = $key . "?";
             }
 
             $array_values = array_values($data);
@@ -772,7 +820,9 @@ class Model extends Database
             $this->where_in     = array(),
             $this->order_by     = "",
             $this->limit        = "",
-            $this->field_select = array()
+            $this->field_select = array(),
+            $this->like         = array(),
+            $this->set          = array()
         );
 
         foreach($data as $key => $value)
@@ -829,5 +879,44 @@ class Model extends Database
 
         return $this->result_array;
     }
+
+    /**
+     * Adds a LIKE clause to a query, 
+     * separating multiple calls with AND.
+     * 
+     * 
+     */
+    public function like($field,$value)
+    {
+        $like = explode(' ',$field);
+
+        if(is_array($like) && count($like) > 1)
+        {
+            $field = [implode(' ',$like) => $value];
+        }
+
+        if(is_array($like) && count($like) == 1)
+        {
+            $opr = [$like[0],' '];
+
+            $field = [implode(' ',$opr) => $value];
+        }
+
+        foreach($field as $key => $value)
+        {
+            $this->like[$key] = $value;
+        }
+
+        return $this->like;
+    }
     
+    /**
+     * Permits you to write the GROUP BY portion of your query
+     * 
+     * @param array|string $field
+     */
+    public function group_by($field)
+    {
+        
+    }
 }

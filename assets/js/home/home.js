@@ -4,13 +4,54 @@ $(document).ready(function () {
         pickerPosition : "top",
         tonesStyle     : "bullet"
     })
+
+    /**
+     * Hide first before selecting a chat friend list
+     */
+    $(".card-footer").hide();
+
     /**
      * This is for the contact list section on the left
      *
      */
-    setInterval(function()
+    var x  = setInterval(function()
     {   
-        var id = 2;
+
+        var id = $(".friends").attr('id');
+
+        if(id != '')
+        {   
+            var data = { id : id };
+
+            /**
+             * This is useful for displaying the chat only.
+             * Retrieve chat data every second using ajax
+             * 
+             */
+            $.ajax({
+                url     : 'home/showChat',
+                data    : data,
+                type    : 'post',
+                dataType: 'json',
+                success : function(xhr)
+                {
+                    if(xhr.status)
+                    {
+                        $(".msg_card_body").html(xhr.content);
+                    }
+                    else 
+                    {
+                        $(".msg_card_body").html("");
+                    }
+                }  
+            });
+        }
+
+        /**
+         * Show contact chat list every second with ajax
+         * 
+         */
+        var id = "";
         var data   = { id : btoa(id)};
         var search = $(".search").val();
         if(search.length == 0)
@@ -30,13 +71,56 @@ $(document).ready(function () {
                 
             })
         }
-    },2000);
-        
+
+
+    },3000);
 });
 
-$('#action_menu_btn').click(function () {
-    $('.action_menu').toggle();
-});
+/**
+ * When you click enter in the chat input
+ * 
+ */
+$("#type_message").on('keydown',function(e)
+{
+    if(e.which == 13)
+    {
+        var typing = $(this).val();
+        
+        if(typing.length > 0)
+        {
+            var friendsID = $(".friends").attr('id'); 
+            
+            var data    = 
+            {
+                typing    : btoa(typing),
+                contactID : friendsID
+            }
+            
+            $.ajax({
+                url     : 'home/sendChat',
+                type    : 'post',
+                data    : data,
+                dataType: 'json',
+                success : function(xhr)
+                {
+                    $("#type_message").val('');
+
+                    if(xhr.status)
+                    {
+                        $(".msg_card_body").append(xhr.content);
+
+                        /**
+                         * When you are no longer typing then delete the words 'is typing'
+                         * 
+                         */
+                        $.ajax({ url : 'home/deleteTyping', type : 'post' });
+                        
+                    }                    
+                }
+            })
+        }
+    }
+});   
 
 /**
  * This is for the top left profile section
@@ -47,10 +131,16 @@ $('#action_profile_btn').click(function()
     $('.action_contact').toggle();
 });
 
+$("#action_menu_btn").click(function()
+{
+    $('.action_menu').toggle();
+});
+
+
 $("#logout").on('click',function()
 {
 
-    $('.action_menu').css('display','none');
+    // $('.action_menu').css('display','none');
 
     var id = $(this).attr('data-id');
 
@@ -132,7 +222,7 @@ $('body').on('click','.select_status',function()
  */
 $("#profile").on('click',function()
 {
-    $('.action_menu').css('display','none');
+    // $('.action_menu').css('display','none');
 
     var id = $(this).data('id');
 
@@ -316,6 +406,8 @@ function validation(message,selectorerror)
  */
 $('body').on('click','.list-contact',function(e)
 {
+    $(".card-footer").show();
+
     var id = $(this).attr('id');
 
     var data = { id : id };
@@ -359,4 +451,57 @@ $('body').on('click','.list-contact',function(e)
             }
         }
     })
+});
+
+/**
+ * When searching for a chat list contact list in the search input
+ * 
+ */
+$('body').on('keyup','.search',function()
+{
+    var search = $('.search').val();
+
+    if(search.length > 0)
+    {
+        var data = { search : btoa(search) };
+
+        $.ajax({
+            url      : 'home/getDataListContactSearch',
+            type     : 'post',
+            data     : data,
+            dataType : 'json',
+            success  : function(xhr)
+            {
+                if(xhr.status)
+                {
+                    $(".body-list-contact").html(JSON.parse(JSON.stringify(xhr.data)));
+                }
+            }
+            
+        })
+    }
+});
+
+/**
+ * Give the status of typing to chat friends
+ * 
+ */
+$('body').on('keyup','#type_message',function()
+{
+    var typing = $('#type_message').val();
+
+    if(typing.length > 0)
+    {
+        var friendsID = $(".friends").attr('id');
+        
+        $.ajax({ url : 'home/statusTyping',data : { friendsID : friendsID } , type : 'post' });
+    }
+    else 
+    {
+        /**
+         * When you are no longer typing then delete the words 'is typing'
+         * 
+         */
+        $.ajax({ url : 'home/deleteTyping', type : 'post' });
+    }
 });

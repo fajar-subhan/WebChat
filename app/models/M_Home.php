@@ -31,7 +31,7 @@ class M_Home extends Model
      * 
      * @return array $result
      */
-    public function getDataListContact()
+    public function _getDataListContact()
     {
         $result = ['status' => false,'data' => null];
 
@@ -198,7 +198,7 @@ class M_Home extends Model
         a.chat_type,
         a.chat_created_at as chat_date,
         b.user_photo as photo
-        FROM mst_chat a 
+        FROM {$this->table} 
         INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
         WHERE 
         (a.chat_sender_id = ? AND a.chat_receive_id = ?) 
@@ -229,6 +229,7 @@ class M_Home extends Model
 
         $this->db->reset_select();
         $this->db->select('
+        a.user_id as id,
         a.user_full_name as fullname,
         b.status_name as stts_online,
         a.user_photo as photo');
@@ -245,4 +246,258 @@ class M_Home extends Model
 
         return $result;
     }   
+
+    /**
+     * Retrieve the most recent chat data
+     * 
+     * @param string $contactID  This comes from the id belonging to each contact list. Which comes from mst_user.user_id
+     * @param string $myID This comes from my session id when logging in
+     * @return array $result
+     */
+    public function _getDataLastChat($contactID,$myID)
+    {
+        $result = [];
+
+        $sql = "SELECT 
+        a.chat_id,
+        a.chat_sender_id as sender_id,
+        a.chat_receive_id as receive_id,
+        a.chat_content as content,
+        a.chat_read as chat_read,
+        a.chat_type,
+        a.chat_created_at as chat_date,
+        b.user_photo as photo
+        FROM {$this->table} 
+        INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
+        WHERE 
+        (a.chat_sender_id = ? AND a.chat_receive_id = ?) 
+        OR (a.chat_sender_id = ? AND a.chat_receive_id = ?)
+        ORDER BY a.chat_id DESC 
+        LIMIT 1
+        ";
+
+
+        $this->db->query($sql,[$contactID,$myID,$myID,$contactID]);
+
+        if($this->db->num_rows() > 0)
+        {
+                $result = $this->result_array_one();
+        }
+        return $result;
+    }
+
+    /**
+     * Retrieve user data that is typing in real time
+     * 
+     * @param string $contactID  This comes from the id belonging to each contact list. Which comes from mst_user.user_id
+     * @param string $myID This comes from my session id when logging in
+     * @return int $count
+     */
+    public function _getDataTyping($contactID,$myID)
+    {
+        $count = 0;
+
+        $sql = "SELECT COUNT(*) as total FROM mst_typing a WHERE a.typing_receive_id = ? AND a.typing_sender_id = ?";
+        $this->db->query($sql,[$myID,$contactID]);
+        
+        if($this->db->row()->total > 0)
+        {
+            $count++;
+        }
+
+        return $count;
+    }
+
+    /**
+     * If there is a new incoming message, 
+     * give a notification in the form of a number symbol
+     * 
+     * @param string $contactID  This comes from the id belonging to each contact list. Which comes from mst_user.user_id
+     * @param string $myID This comes from my session id when logging in
+     * @return int $count
+     */
+    public function _getDataNewMessage($contactID,$myID)
+    {
+        $count = 0;
+
+        $sql = "SELECT
+        COUNT(*) as total
+        FROM {$this->table}
+        WHERE a.chat_sender_id = ? 
+        AND a.chat_receive_id = ?
+        AND a.chat_read = ?";
+
+        $this->db->query($sql,[$contactID,$myID,0]);
+
+        if($this->db->num_rows() > 0)
+        {
+            $count = $this->db->row()->total;
+        }
+
+        return $count;
+    }
+
+    /**
+     * If the message has been read, 
+     * it is a sign that the message has been read
+     * 
+     */
+    public function _ChatRead($contactID,$myID)
+    {
+        $this->db->set('chat_read',1);
+        $this->db->where('chat_sender_id',$contactID);
+        $this->db->where('chat_receive_id',$myID);
+        $this->db->update('mst_chat');
+    }
+
+    /**
+     * Retrieve data based on search
+     * 
+     */
+    public function _getDataBySearch()
+    {
+        $result = ['status' => false,'data' => null];
+        $this->db->reset_select();
+        $this->db->select('
+        b.user_id as id,
+        b.user_full_name as fullname,
+        b.user_name as username,
+        b.user_photo as photo,
+        c.status_name as stts_online,
+        a.chat_content as content,
+        a.chat_type,
+        a.chat_created_at as chat_date
+        ');
+        $this->db->from('mst_chat a');
+        $this->db->join('mst_user b',' (a.chat_sender_id = b.user_id) OR (a.chat_receive_id = b.user_id) ','inner');
+        $this->db->join('ref_status_online c','b.user_status_online = c.status_code','inner');
+        $this->db->where('b.user_id !=',userdata('id'));
+        $this->db->like('a.chat_content',base64_decode(Post()->search));
+        $this->db->get();
+
+        if($this->db->num_rows() > 0)
+        {
+            foreach($this->db->result_array() as $rows)
+            {
+                $data[] = $rows;
+            }
+
+            $result = ['status' => true,'data' => $data];
+        }
+
+        return $result;
+    }
+
+    /**
+     * When the button is entered, the chat message process
+     * 
+     * @param string $chat_type
+     * @return int $count
+     */
+    public function _sendChat($chat_type)
+    {
+
+        $count = 0;
+        $this->db->set('chat_sender_id',userdata('id'));
+        $this->db->set('chat_receive_id',Decrypt(Post()->contactID));
+        $this->db->set('chat_content',base64_decode(Post()->typing));
+        $this->db->set('chat_read',0);
+        $this->db->set('chat_type',$chat_type);
+        $this->db->set('chat_created_at',date('Y-m-d H:i:s'));
+        $this->db->insert('mst_chat');
+        
+        if($this->db->num_rows() > 0)
+        {
+            $count++;
+        }
+
+        return $count;
+    }
+
+    /**
+     * Restore last chat data
+     * 
+     * @return array $result
+     */
+    public function _lastShowChat()
+    {
+        $result = [];
+
+        $sql = "SELECT 
+        a.chat_sender_id as sender_id,
+        b.user_photo as photo,
+        a.chat_created_at as chat_date,
+        a.chat_content as content
+        FROM mst_chat a 
+        INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
+        WHERE 
+        a.chat_sender_id = ? 
+        AND a.chat_receive_id = ? 
+        ORDER BY a.chat_id DESC LIMIT 1";
+        
+        $contactID = Decrypt(Post()->contactID);
+
+        /**
+         * This comes from my session id when logging in
+         * 
+         * @var string $id
+         */
+        $myID = userdata('id');
+
+        $this->db->query($sql,[$myID,$contactID]);
+
+        if($this->db->num_rows() > 0)
+        {
+            $result[] = $this->db->result_array_one();
+        }
+
+        return $result;
+    }
+    
+    /**
+     * Check if someone has typed
+     * 
+     * @return int $count
+     */
+    public function _checkTyping()
+    {
+        $count = 0;
+
+        $this->db->reset_select();
+        $this->db->select('count(*) as count');
+        $this->db->from('mst_typing');
+        $this->db->get();
+
+        if($this->db->num_rows() > 0)
+        {
+            $count = $this->db->result_array_one()['count'];
+        }
+        
+        return $count;
+    }
+
+    /**
+     * Entering data while typing in a table
+     * 
+     * @return void 
+     */
+    public function _statusTyping()
+    {
+        $this->db->set('typing_sender_id',userdata('id'));
+        $this->db->set('typing_receive_id',Decrypt(Post()->friendsID));
+        $this->db->insert('mst_typing');
+    }
+
+    
+    /**
+     * When you are no longer typing then delete the words 'is typing'
+     * 
+     * @return void
+     */
+    public function _deleteTyping()
+    {
+        $this->db->reset_select();
+        $this->db->where('typing_sender_id',userdata('id'));
+        $this->db->delete('mst_typing');
+    }
 }

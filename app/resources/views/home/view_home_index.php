@@ -49,18 +49,13 @@
                         </li>
                     </ul>
                     <div class="input-group">
-                        <input type="text" placeholder="Search..." name="" class="form-control search">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text search_btn" style="padding:10px">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </div>
+                        <input type="text" placeholder="Search by message" name="" class="form-control search">
                     </div>
                 </div>
                 <div class="card-body contacts_body">
                     <ul class="contacts">
                         <div class="body-list-contact">
-
+                            
                         </div>
                     </ul>
                 </div>
@@ -92,7 +87,7 @@
                             <input type="file" class="file" id="file_upload">
                         </label>
 
-                        <textarea name="" class="form-control type_msg" id="message" placeholder="Type your message..."></textarea>
+                        <textarea name="" class="form-control type_msg" id="type_message" placeholder="Type your message..."></textarea>
 
                         <div class="input-group-append">
                             <label for="file_send">
@@ -142,7 +137,7 @@
 
                                 <div class="wrap-input100 m-b-23" id="password_error" data-validate="">
                                     <span class="label-input100">Password</span>
-                                    <input class="input100" type="password" id="password" name="password" placeholder="Type your new password">
+                                    <input class="input100" type="password" id="password" name="password" placeholder="Type your message">
                                     <span class="focus-input100" data-symbol="&#xf190;"></span>
                                 </div>
 

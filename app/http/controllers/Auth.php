@@ -125,27 +125,18 @@ class Auth extends Controller
     {
         $result     = ['status' => false,'message' => 'Username or password do not match'];
         $username   = Post()->username;
-
-        // var_dump(Decrypt(base64_decode(Post()->password)));die();   benar fix 
-
-        if
-        (
-            Decrypt(get_cookie('password')) == Decrypt(base64_decode(Post()->password)) 
-        )
+        
+        if(cek_cookie('password'))
         {
             $password = Decrypt(base64_decode(Post()->password));
         }
-        else if(Decrypt(get_cookie('password')) == base64_decode(Post()->password))
+        else 
         {
             $password = base64_decode(Post()->password);
         }
-        else
-        {
-            $password = base64_decode(Post()->password);
-        }
-    
+
         $user       = $this->M_Auth->_getDataByUsername($username);
-        
+
         if($user['status'])
         {
             /* If the password or username does not match the data in the database, then give an error message */

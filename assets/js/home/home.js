@@ -56,6 +56,51 @@ $(document).ready(function () {
         })
     });
 
+    /**
+     * Sending message files
+     * 
+     */
+    $("#file_upload").on('change',function()
+    {
+        if($(this)[0].files.length > 0)
+        {
+            var file = $(this)[0].files[0];
+        }
+        else 
+        {
+            var file = "";
+        }
+
+        var fd          = new FormData();
+        var friendsID   = $('.friends').attr('id');
+        
+        fd.append('file',file);
+        fd.append('friendsID',friendsID);
+
+        $.ajax({
+            url         : 'home/uploadFile',
+            type        : 'post',
+            dataType    : 'json',
+            data        : fd,
+            contentType : false,
+            processData : false,
+            success     : function(xhr)
+            {
+                if(xhr.status)
+                {
+                    $(this).val('');
+                }
+                else 
+                {
+                    swal.fire({
+                        icon  : 'error',
+                        title : 'Failed',
+                        text  : xhr.message
+                    });
+                }
+            }
+        })
+    });
 
     /**
      * This is for the contact list section on the left

@@ -10,3 +10,7 @@ Security.ini
 # Chat image 
 assets/images/chat/*.jpg
 assets/images/chat/*.png
+assets/images/chat/*.jpeg
+
+# Files  
+assets/files/*.pdf

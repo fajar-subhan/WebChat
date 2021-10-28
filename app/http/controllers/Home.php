@@ -96,7 +96,7 @@ class Home extends Controller
                  * 
                  * @var array $last_chat
                  */
-                $last_chat  = $this->M_Home->_getDataLastChat($contactID,$myID);    
+                $last_chat  = $this->M_Home->_getDataLastChat($contactID,$myID);  
 
                 if($last_chat)
                 {
@@ -119,14 +119,14 @@ class Home extends Controller
                             switch ($last_chat['chat_type'])
                             {
                                 case 'images' : 
-                                    $last_message = '<span class="chat-meta text-muted"><i class="fa fa-camera"></i> Images</span>';
+                                    $last_message = '<span class="chat-meta"><i class="fa fa-camera"></i> Images</span>';
                                     break;
                                     
-                                case 'file'   : 
-                                    $last_message = '<span class="chat-meta text-muted"><i class="fa fa-paperclip"></i> File</span>';
+                                case 'files'   : 
+                                    $last_message = '<span class="chat-meta"><i class="fa fa-paperclip"></i> File</span>';
                                     break;
                                 case 'text'   : 
-                                    $last_message = substr($last_chat['content'],0,40);
+                                    $last_message = substr($last_chat['content'],0,30);
                                 break;
                             }
 
@@ -414,11 +414,15 @@ class Home extends Controller
                 
                 switch ($rows['chat_type'])
                 {
-                    case 'text'  : 
+                    case 'text'     : 
                         $content = $rows['content'];
                     break;
 
-                    case 'image' :
+                    case 'files'    :
+                        $content = '<a target="_blank" href="'.ASSETS_IMAGES.'../files/'.$rows['content'].'" download>'.$rows['content'].'</a>';
+                    break;
+
+                    case 'images'   :
                         $path    = ASSETS_IMAGES . 'chat/' . $rows['content'];
                         $content = '<img style="width:100%" height="200" src="'.$path.'">'; 
                     break;
@@ -524,7 +528,7 @@ class Home extends Controller
                 </div>
                 <div class="user_info"> 
                 <span class="user_info_username">'.$val['fullname'].'</span> 
-                <span class="last_message">'.str_replace(base64_decode(Post()->search),'<b>'. base64_decode(Post()->search) .'</b>',substr($val['content'],0,40)).'</span> <span class="time-meta pull-right"> '.date('H:i',strtotime($val['chat_date'])).' </span> </div></div></div></div></li>';
+                <span class="last_message">'.str_replace(base64_decode(Post()->search),'<b>'. base64_decode(Post()->search) .'</b>',substr($val['content'],0,30)).'</span> <span class="time-meta pull-right"> '.date('H:i',strtotime($val['chat_date'])).' </span> </div></div></div></div></li>';
             }
             
             $result = ['status' => true,'data' => $data];
@@ -604,6 +608,7 @@ class Home extends Controller
     /**
      * Send a picture message
      * 
+     * @return json
      */
     public function uploadImage()
     {
@@ -611,8 +616,8 @@ class Home extends Controller
 
         if(!empty($_FILES['photo']))  
         {
-            /* Allowed extensions : jpg | png */
-            $allowed_extension = ['jpg','png'];
+            /* Allowed extensions : jpg | png | jpeg */
+            $allowed_extension = ['jpg','png' , 'jpeg'];
             
             /* Extension */
             $extension      = pathinfo($_FILES['photo']['name'],PATHINFO_EXTENSION);
@@ -640,6 +645,58 @@ class Home extends Controller
                 else 
                 {
                     $result = ['status' => 0,'message' => 'Maximum upload file 1 mb'];
+                }
+            }
+            else 
+            {
+                $result = ['status' => 0,'message' => 'Invalid file format'];
+            }
+        }  
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+
+    /**
+     * Send a file message
+     * 
+     * @return json 
+     */
+    public function uploadFile()
+    {
+        $result = ['status' => 0,'message' => 'Sending file failed'];
+
+        if(!empty($_FILES['file']))  
+        {
+            /* Allowed extensions : pdf | zip | mp4 | rar */
+            $allowed_extension = ['pdf','zip','mp4','rar'];
+            
+            /* Extension */
+            $extension      = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION);
+            
+            $filename       = "files_" . md5(date('Y-m-d H:i:s')) . '.' . $extension;
+
+            $file_size      = $_FILES['file']['size'];
+            $file_tmp       = $_FILES['file']['tmp_name'];
+
+            /* If there is a file extension is allowed */
+            if(in_array($extension,$allowed_extension) == true)
+            {
+                /* Set the maximum uploaded file to 2mb */
+                if($file_size < 2000000)
+                {
+                    move_uploaded_file($file_tmp,'assets/files/' . $filename );
+
+                    $upload = $this->M_Home->_uploadFile($filename);
+
+                    if($upload)
+                    {
+                        $result = [ 'status' => 1];
+                    }
+                }
+                else 
+                {
+                    $result = ['status' => 0,'message' => 'Maximum upload file 2 mb'];
                 }
             }
             else 

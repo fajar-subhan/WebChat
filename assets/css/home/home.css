@@ -479,3 +479,7 @@ html {
     position: absolute;
     right: 7%;
 }
+
+.chat-meta {
+    font-size: 10px !important;
+}

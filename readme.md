@@ -2,9 +2,17 @@
 <!-- PROJECT LOGO -->
 <br />
 
+<div align="center">
+  <a href="https://github.com/fajar-subhan/WebChat">
+    <img src="https://raw.githubusercontent.com/fajar-subhan/WebChat/master/assets/images/icons/favicon.ico?token=AJ2SBHBKM43BXYHS34LYNATBQ2VP6" alt="Logo" width="80" height="80">
+  </a>
+
 <h3 align="center">Web Chat</h3>
 
-
+  <p align="center">
+    Open Source Web Chat Application
+  </p>
+</div>
 
 
 <!-- TABLE OF CONTENTS -->
@@ -91,7 +99,7 @@ Distributed under the MIT License.
 
 Fajar Subhan - fajarsubhan9b@gmail.com
 
-Project Link: [Web Chat](https://github.com/fajar-subhan/WebChat.git)
+Project Link: [Web Chat](https://github.com/fajar-subhan/WebChat)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

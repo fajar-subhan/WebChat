@@ -1,8 +1,10 @@
 $(document).ready(function () {
 
-    $("#message").emojioneArea({
+    $("#type_message").emojioneArea({
         pickerPosition : "top",
-        tonesStyle     : "bullet"
+        tonesStyle     : "bullet",
+        saveEmojisAs   : true,
+        shortnames     : true,
     })
 
     /**
@@ -130,6 +132,7 @@ $(document).ready(function () {
                     if(xhr.status)
                     {
                         $(".msg_card_body").html(xhr.content);
+
                     }
                     else 
                     {
@@ -168,26 +171,29 @@ $(document).ready(function () {
     },3000);
 });
 
+
+
 /**
  * When you click enter in the chat input
  * 
  */
-$("#type_message").on('keydown',function(e)
+$('body').on('keydown','.emojionearea-editor',function(e)
 {
+    var typing = $('.emojionearea-editor').data('emojioneArea').getText();
+
     if(e.which == 13)
     {
-        var typing = $(this).val();
-        
+
         if(typing.length > 0)
         {
             var friendsID = $(".friends").attr('id'); 
             
             var data    = 
             {
-                typing    : btoa(typing),
+                typing    : btoa(unescape(encodeURIComponent(typing))),
                 contactID : friendsID
             }
-            
+
             $.ajax({
                 url     : 'home/sendChat',
                 type    : 'post',
@@ -195,11 +201,14 @@ $("#type_message").on('keydown',function(e)
                 dataType: 'json',
                 success : function(xhr)
                 {
-                    $("#type_message").val('');
+                    $('.emojionearea-editor').data('emojioneArea').setText('');
 
                     if(xhr.status)
                     {
                         $(".msg_card_body").append(xhr.content);
+
+                        var x = $('.msg_card_body').height() + 221000;
+                        $('.msg_card_body').scrollTop(x);
 
                         /**
                          * When you are no longer typing then delete the words 'is typing'
@@ -212,7 +221,7 @@ $("#type_message").on('keydown',function(e)
             })
         }
     }
-});   
+}); 
 
 /**
  * This is for the top left profile section
@@ -221,18 +230,22 @@ $("#type_message").on('keydown',function(e)
 $('#action_profile_btn').click(function()
 {
     $('.action_contact').toggle();
+
+    $(".action_menu").hide();
 });
 
 $("#action_menu_btn").click(function()
 {
     $('.action_menu').toggle();
+
+    $(".action_contact").hide();
 });
 
 
 $("#logout").on('click',function()
 {
 
-    // $('.action_menu').css('display','none');
+    $('.action_menu').css('display','none');
 
     var id = $(this).attr('data-id');
 
@@ -314,7 +327,7 @@ $('body').on('click','.select_status',function()
  */
 $("#profile").on('click',function()
 {
-    // $('.action_menu').css('display','none');
+    $('.action_menu').css('display','none');
 
     var id = $(this).data('id');
 
@@ -518,6 +531,8 @@ $('body').on('click','.list-contact',function(e)
             if(xhr.status)
             {
                 $(".msg_card_body").html(xhr.content);
+
+                $('.msg_card_body').scrollTop(40000);
             }
             else 
             {
@@ -578,9 +593,9 @@ $('body').on('keyup','.search',function()
  * Give the status of typing to chat friends
  * 
  */
-$('body').on('keyup','#type_message',function()
+$('body').on('keyup','.emojionearea-editor',function()
 {
-    var typing = $('#type_message').val();
+    var typing = document.getElementsByClassName('emojionearea-editor')[0].innerText;
 
     if(typing.length > 0)
     {

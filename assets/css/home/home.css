@@ -288,7 +288,7 @@ html {
     right: 0;
     bottom: -15px;
     color: rgba(255, 255, 255, 0.5);
-    font-size: 10px;
+    font-size: 11px;
 }
 
 .msg_head {
@@ -482,4 +482,8 @@ html {
 
 .chat-meta {
     font-size: 10px !important;
+}
+
+.read_chat {
+    color:#34b7f1 !important;
 }

@@ -197,7 +197,8 @@ class M_Home extends Model
         a.chat_read as chat_read,
         a.chat_type,
         a.chat_created_at as chat_date,
-        b.user_photo as photos
+        b.user_photo as photos,
+        b.user_status_online AS stts_online
         FROM {$this->table} 
         INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
         WHERE 
@@ -266,7 +267,8 @@ class M_Home extends Model
         a.chat_read as chat_read,
         a.chat_type,
         a.chat_created_at as chat_date,
-        b.user_photo as photo
+        b.user_photo as photo,
+        b.user_status_online AS stts_online
         FROM {$this->table} 
         INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
         WHERE 
@@ -366,6 +368,9 @@ class M_Home extends Model
         c.status_name as stts_online,
         a.chat_content as content,
         a.chat_type,
+        a.chat_read,
+        a.chat_sender_id as sender_id,
+        a.chat_receive_id as receive_id,
         a.chat_created_at as chat_date
         ');
         $this->db->from('mst_chat a');
@@ -427,7 +432,10 @@ class M_Home extends Model
         a.chat_sender_id as sender_id,
         b.user_photo as photo,
         a.chat_created_at as chat_date,
-        a.chat_content as content
+        a.chat_content as content,
+        b.user_status_online as stts_online,
+        a.chat_read as chat_read,
+        a.chat_receive_id as receive_id
         FROM mst_chat a 
         INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
         WHERE 

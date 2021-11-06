@@ -98,16 +98,18 @@ class Home extends Controller
                  */
                 $last_chat  = $this->M_Home->_getDataLastChat($contactID,$myID);  
 
+                $chat_read  = "";
+
                 if($last_chat)
                 {
-                
+
                     /**
                      * Retrieve data when someone is typing into our account
                      * 
                      * @var int $typing
                      */
                     $typing     = $this->M_Home->_getDataTyping($contactID,$myID);
-                    
+                
                     if($typing > 0)
                     {
                         $last_message = "typing ......";
@@ -116,18 +118,53 @@ class Home extends Controller
                     {
                         foreach($last_chat as $key => $value)
                         {
+
                             switch ($last_chat['chat_type'])
                             {
                                 case 'images' : 
                                     $last_message = '<span class="chat-meta"><i class="fa fa-camera"></i> Images</span>';
                                     break;
-                                    
                                 case 'files'   : 
                                     $last_message = '<span class="chat-meta"><i class="fa fa-paperclip"></i> File</span>';
                                     break;
                                 case 'text'   : 
                                     $last_message = substr($last_chat['content'],0,30);
                                 break;
+                            }
+                            
+                            $chat_read  = '<span>&#10004;</span>'; 
+
+                
+                            /**
+                             * Two blue ticks : The recipient has read your message.
+                             */
+                            if
+                                (
+                                    $last_chat['sender_id']   == userdata('id') && 
+                                    $last_chat['receive_id']  == $contactID &&
+                                    $last_chat['chat_read']   == 1
+                                )
+                            {
+                                $chat_read = '<span style="color:#34b7f1 !important;font-size: 10px !important;">&#10004;&#10004;</span>'; 
+                            }
+            
+                            /**
+                             * Tick ​​two grays: The message has been delivered to the recipient's phone 
+                             * but the received message has not been read.
+                             * 
+                             */
+                            else if
+                                (
+                                    $last_chat['sender_id']   == userdata('id') &&
+                                    $last_chat['receive_id']  == $contactID &&
+                                    $last_chat['chat_read']   == 0
+                                )
+                            {
+                                $chat_read = '<span style="color:rgba(255, 255, 255, 0.5) !important;font-size: 10px !important;">&#10004;&#10004;</span>'; 
+                            }
+                            else 
+                            {
+                                $chat_read = '';
                             }
 
                             $last_date    = date('H:i',strtotime($last_chat['chat_date']));
@@ -162,7 +199,7 @@ class Home extends Controller
                     <div class="img_cont"> <img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> <span class="'.$icon.'"></span> </div>
                         <div class="user_info">
                             <span class="user_info_username">'.$val['fullname'].'</span>
-                            <span class="last_message">'.$last_message.'</span>
+                            <span class="last_message">' . $chat_read . ' ' . $last_message .'</span>
 
                             <span class="time-meta pull-right">
                             '.$last_date.'							
@@ -378,7 +415,7 @@ class Home extends Controller
         $result = ['status' => false,'content' => null];
 
         $show_chat = $this->M_Home->_showChat();
-        
+    
         if($show_chat)
         {
             $result = "";
@@ -405,13 +442,21 @@ class Home extends Controller
              */
             $this->M_Home->_ChatRead($contactID,$myID);
 
+            /**
+             * The message has been sent.
+             * 
+             * @var string $chat_read
+             */
+            
             foreach($show_chat as $rows)
             {           
                 $color      = $rows['sender_id'] == userdata('id') ?  'msg_cotainer' : 'msg_cotainer_send';
                 $images     = ASSETS_IMAGES . 'contacts/' . $rows['photos'];
                 $position   = $rows['sender_id'] == userdata('id') ? 'justify-content-end' : 'justify-content-start';
-                $date       = date('H:i',strtotime($rows['chat_date']));
+                $time       = date('H:i',strtotime($rows['chat_date']));
                 
+                $chat_read  = '<span>&#10004;</span>'; 
+
                 switch ($rows['chat_type'])
                 {
                     case 'text'     : 
@@ -428,7 +473,40 @@ class Home extends Controller
                     break;
                 }
 
-                $result .= ' <div class="d-flex '. $position .' mb-4"> <div class="'. $color .'"> '.$content.' <span class="msg_time_send">'.$date.'</span> </div><div class="img_cont_msg"> <img src="'. $images . '" class="rounded-circle user_img_msg"> </div></div>';
+                /**
+                 * Two blue ticks : The recipient has read your message.
+                 */
+                if
+                    (
+                        $rows['sender_id']   == userdata('id') && 
+                        $rows['receive_id']  == $contactID &&
+                        $rows['chat_read']   == 1
+                    )
+                {
+                    $chat_read = '<span style="color:#34b7f1 !important;font-size: 10px !important;">&#10004;&#10004;</span>'; 
+                }
+
+                /**
+                 * Tick ​​two grays: The message has been delivered to the recipient's phone 
+                 * but the received message has not been read.
+                 * 
+                 */
+                else if
+                    (
+                        $rows['sender_id']   == userdata('id') &&
+                        $rows['receive_id']  == $contactID &&
+                        $rows['chat_read']   == 0
+                    )
+                {
+                    $chat_read = '<span style="font-size: 10px !important;">&#10004;&#10004;</span>'; 
+                }
+                else 
+                {
+                    $chat_read = '';
+                }
+
+
+                $result .= ' <div class="d-flex '. $position .' mb-4"> <div class="'. $color .'"> '.$content.' <span class="msg_time_send">'.$time . ' ' . $chat_read.'</span> </div><div class="img_cont_msg"> <img src="'. $images . '" class="rounded-circle user_img_msg"> </div></div>';
             }
 
 
@@ -499,6 +577,8 @@ class Home extends Controller
         {
             $data   = "";
 
+            $chat_read  = "";
+
             foreach($user['data'] as $key => $val)
             {
                 switch($val['stts_online'])
@@ -520,6 +600,46 @@ class Home extends Controller
                     break;
                 }
 
+                /**
+                 * This comes from the id belonging to each contact list.
+                 * Which comes from mst_user.user_id
+                 * 
+                 * @var string $id
+                 */
+                $contactID = $val['id'];
+
+                /**
+                 * Two blue ticks : The recipient has read your message.
+                 */
+                if
+                    (
+                        $val['sender_id']   == userdata('id') && 
+                        $val['receive_id']  == $contactID &&
+                        $val['chat_read']   == 1
+                    )
+                {
+                    $chat_read = '<span style="color:#34b7f1 !important;font-size: 10px !important;">&#10004;&#10004;</span>'; 
+                }
+
+                /**
+                 * Tick ​​two grays: The message has been delivered to the recipient's phone 
+                 * but the received message has not been read.
+                 * 
+                 */
+                else if
+                    (
+                        $val['sender_id']   == userdata('id') &&
+                        $val['receive_id']  == $contactID &&
+                        $val['chat_read']   == 0
+                    )
+                {
+                    $chat_read = '<span style="color:rgba(255, 255, 255, 0.5) !important;font-size: 10px !important;">&#10004;&#10004;</span>'; 
+                }
+                else 
+                {
+                    $chat_read = '';
+                }
+
         
                 $data .= ' <li class="list-contact" id="'.Encrypt($val['id']).'"> 
                 <div class="d-flex bd-highlight"> <div class="img_cont"> 
@@ -528,7 +648,7 @@ class Home extends Controller
                 </div>
                 <div class="user_info"> 
                 <span class="user_info_username">'.$val['fullname'].'</span> 
-                <span class="last_message">'.str_replace(base64_decode(Post()->search),'<b>'. base64_decode(Post()->search) .'</b>',substr($val['content'],0,30)).'</span> <span class="time-meta pull-right"> '.date('H:i',strtotime($val['chat_date'])).' </span> </div></div></div></div></li>';
+                <span class="last_message">'.$chat_read . ' ' . str_replace(base64_decode(Post()->search),'<b>'. base64_decode(Post()->search) . '</b>',substr($val['content'],0,30)).'</span> <span class="time-meta pull-right"> '.date('H:i',strtotime($val['chat_date'])).' </span> </div></div></div></div></li>';
             }
             
             $result = ['status' => true,'data' => $data];
@@ -546,10 +666,16 @@ class Home extends Controller
     public function sendChat()
     {
         $result = ['status' => false,'content' => null];
-        
         $send = $this->M_Home->_sendChat('text');
 
         $content = "";
+        /**
+         * This comes from the id belonging to each contact list.
+         * Which comes from mst_user.user_id
+         * 
+         * @var string $id
+         */
+        $contactID = Decrypt(Post()->contactID);
 
         if($send)
         {
@@ -557,15 +683,51 @@ class Home extends Controller
         
             foreach($show_chat as $rows)
             {                           
-                
                 $color      = $rows['sender_id'] == userdata('id') ?  'msg_cotainer' : 'msg_cotainer_send';
                 $images     =  ASSETS_IMAGES . 'contacts/' . $rows['photo'];
                 $position   = $rows['sender_id'] == userdata('id') ? 'justify-content-end' : 'justify-content-start';
                 $date       = date('H:i',strtotime($rows['chat_date']));
 
-                $content .= ' <div class="d-flex '. $position .' mb-4"> <div class="'. $color .'"> '.$rows['content'].' <span class="msg_time_send">'.$date.'</span> </div><div class="img_cont_msg"> <img src="'. $images . '" class="rounded-circle user_img_msg"> </div></div>';
+                $chat_read  = '<span>&#10004;</span>'; 
+
+                
+                /**
+                 * Two blue ticks : The recipient has read your message.
+                 */
+                if
+                    (
+                        $rows['sender_id']   == userdata('id') && 
+                        $rows['receive_id']  == $contactID &&
+                        $rows['chat_read']   == 1
+                    )
+                {
+                    $chat_read = '<span style="color:#34b7f1 !important;font-size: 10px !important;">&#10004;&#10004;</span>'; 
+                }
+
+                /**
+                 * Tick ​​two grays: The message has been delivered to the recipient's phone 
+                 * but the received message has not been read.
+                 * 
+                 */
+                else if
+                    (
+                        $rows['sender_id']   == userdata('id') &&
+                        $rows['receive_id']  == $contactID &&
+                        $rows['chat_read']   == 0
+                    )
+                {
+                    $chat_read = '<span style="font-size: 10px !important;">&#10004;&#10004;</span>'; 
+                }
+                else 
+                {
+                    $chat_read = '';
+                }
+
+                $content .= ' <div class="d-flex '. $position .' mb-4"> <div class="'. $color .'"> '.$rows['content'].' <span class="msg_time_send">'.$date . ' ' . $chat_read.'</span> </div><div class="img_cont_msg"> <img src="'. $images . '" class="rounded-circle user_img_msg"> </div></div>';
             }
 
+
+            
 
             $result = ['status' => true,'content' => $content];
 

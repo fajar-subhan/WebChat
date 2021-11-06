@@ -109,7 +109,6 @@ class M_Auth extends Model
     public function _getLastQuery()
     {
         $order = 0;
-        $this->reset_select();
         $this->db->select('a.user_order');
         $this->db->from('mst_user a');
         $this->db->order_by('a.user_order','DESC');

@@ -45,7 +45,7 @@ class Home extends Controller
      */
     public function getDataListContact()
     {
-        $result = ['status' => "false", 'data' => null];
+        $result = ['status' => false, 'data' => null];
 
         $user   = $this->M_Home->_getDataListContact();
 

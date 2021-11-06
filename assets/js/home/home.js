@@ -612,3 +612,50 @@ $('body').on('keyup','.emojionearea-editor',function()
         $.ajax({ url : 'home/deleteTyping', type : 'post' });
     }
 });
+
+/**
+ * When the send message button is clicked then send the message with ajax
+ * 
+ */
+function sendChat()
+{
+
+    var typing = $('.emojionearea-editor').data('emojioneArea').getText();
+
+    if(typing.length > 0)
+    {
+        var friendsID = $(".friends").attr('id'); 
+        
+        var data    = 
+        {
+            typing    : btoa(unescape(encodeURIComponent(typing))),
+            contactID : friendsID
+        }
+        
+        $.ajax({
+            url     : 'home/sendChat',
+            type    : 'post',
+            data    : data,
+            dataType: 'json',
+            success : function(xhr)
+            {
+                $('.emojionearea-editor').data('emojioneArea').setText('');
+
+                if(xhr.status)
+                {
+                    $(".msg_card_body").append(xhr.content);
+
+                    var x = $('.msg_card_body').height() + 221000;
+                    $('.msg_card_body').scrollTop(x);
+
+                    /**
+                     * When you are no longer typing then delete the words 'is typing'
+                     * 
+                     */
+                    $.ajax({ url : 'home/deleteTyping', type : 'post' });
+                    
+                }                    
+            }
+        })
+    }
+}

@@ -88,8 +88,10 @@
                         </label>
                         <textarea class="form-control type_msg"  id="type_message" placeholder="Type your message..."></textarea>
                         <div class="input-group-append">
-                            <label for="file_send">
-                                <span class="input-group-text file_span" id="file_send"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>
+                            <label for="send_message_button">
+                                <span class="input-group-text file_span" id="send_message_button" onclick="sendChat()" style="transition: none;">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </span>
                             </label>
                         </div>
                     </div>
@@ -135,7 +137,7 @@
 
                                 <div class="wrap-input100 m-b-23" id="password_error" data-validate="">
                                     <span class="label-input100">Password</span>
-                                    <input class="input100" type="password" id="password" name="password" placeholder="Type your message">
+                                    <input class="input100" type="password" id="password" name="password" placeholder="Type your password">
                                     <span class="focus-input100" data-symbol="&#xf190;"></span>
                                 </div>
 

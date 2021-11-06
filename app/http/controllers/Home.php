@@ -324,39 +324,57 @@ class Home extends Controller
                 /* Set the maximum uploaded file size to 1mb */
                 if($file_size < 1000000)
                 {
-                    move_uploaded_file($file_tmp,'assets/images/contacts/' . $output_name);
-
-                    $upload = $this->M_Home->_updateProfile($output_name);
+                    /** @link : https://www.php.net/manual/en/function.getimagesize.php */
+                    $image  = getimagesize($_FILES['photo']['tmp_name']);
+                    $width  = $image[0];
+                    $height = $image[1];
                     
-                    if($upload)
+                    /** 
+                     * Check the dimensions of the width and height of the uploaded image 
+                     * file whether it is appropriate
+                     * 
+                     */
+                    if($width == 800 && $height == 800)
                     {
-                        $result = 
-                        [
-                            'status'    => true,
-                            'message'   => 'Data updated successfully'
-                        ];
+                        /** @link : https://www.php.net/manual/en/function.move-uploaded-file.php */
+                        move_uploaded_file($file_tmp,'assets/images/contacts/' . $output_name);
 
-                        /**
-                         * If it is successfully updated, first delete the photo 
-                         * that was previously on the server so that it doesn't 
-                         * accommodate a lot of the previous photo
-                         * 
-                         */
-                        if(!empty(Decrypt(Post()->prevPhoto)))
+                        $upload = $this->M_Home->_updateProfile($output_name);
+                        
+                        if($upload)
                         {
+                            $result = 
+                            [
+                                'status'    => true,
+                                'message'   => 'Data updated successfully'
+                            ];
+    
                             /**
-                             * Check if the previous photo file exists, 
-                             * if there is then delete the photo first
+                             * If it is successfully updated, first delete the photo 
+                             * that was previously on the server so that it doesn't 
+                             * accommodate a lot of the previous photo
                              * 
                              */
-                            if(file_exists(ASSETS_IMAGES . 'contacts/' . Decrypt(Post()->prevPhoto)) && (Decrypt(Post()->prevPhoto) != 'default.jpg'))
+                            if(!empty(Decrypt(Post()->prevPhoto)))
                             {
-                                $path = ASSETS_IMAGES . 'contacts/' . Decrypt(Post()->prevPhoto);
-
-                                /* Remove previous photo file */
-                                unlink($path);
+                                /**
+                                 * Check if the previous photo file exists, 
+                                 * if there is then delete the photo first
+                                 * 
+                                 */
+                                if(file_exists(ASSETS_IMAGES . 'contacts/' . Decrypt(Post()->prevPhoto)) && (Decrypt(Post()->prevPhoto) != 'default.jpg'))
+                                {
+                                    $path = ASSETS_IMAGES . 'contacts/' . Decrypt(Post()->prevPhoto);
+    
+                                    /* Remove previous photo file */
+                                    unlink($path);
+                                }
                             }
                         }
+                    }
+                    else 
+                    {
+                        $result = ['status' => false,'message' => 'Dimensions must be 800 x 800 pixels'];
                     }
                 }
                 else 

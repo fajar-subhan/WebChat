@@ -132,7 +132,7 @@
                                 <div class="wrap-input100 m-b-23" id="photo_error" data-validate="">
                                     <span class="label-input100">Photo</span>
                                     <input type="file" name="photo" id="photo">
-                                    <small class="text-muted">You can only upload in jpg, jpeg, png formats</small>
+                                    <small class="text-muted" style="font-size:8px;font-weight:bold;">You can only upload in jpg, jpeg, png format with dimensions of 800x800 pixels</small>
                                 </div>
 
                                 <div class="wrap-input100 m-b-23" id="password_error" data-validate="">

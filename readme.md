@@ -1,17 +1,9 @@
 <div id="top"></div>
 <!-- PROJECT LOGO -->
 <br />
-<div align="center">
-  <a href="https://github.com/fajar-subhan/FS_Framework">
-    <img src="https://github.com/fajar-subhan/FS_Framework/blob/master/assets/images/readme/logo.png" alt="Logo" width="80" height="80">
-  </a>
 
-<h3 align="center">FS Framework</h3>
+<h3 align="center">Web Chat</h3>
 
-  <p align="center">
-    Open Source PHP Framework
-  </p>
-</div>
 
 
 
@@ -20,7 +12,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-fs-framework">About The FS Framework</a>
+      <a href="#about-the-web-chat">About The Web Chat</a>
       <ul>
         <li><a href="#server-requirements">Server Requirements</a></li>
         <li><a href="#built-with">Built With</a></li>
@@ -39,12 +31,9 @@
 
 
 
-<!-- ABOUT THE FS Framework -->
-## About The FS Framework
-
-<img src="https://github.com/fajar-subhan/FS_Framework/blob/master/assets/images/readme/icon.png" alt="Product Name Screen Shot" style="width:100%"></a>
- 
-FS Framework is an Application Development Framework - a toolkit - for people building websites using PHP. Its goal is to allow you to develop projects faster than you could if you were writing code from scratch, by providing a rich collection of libraries for common tasks required, as well as a simple interface and logistical structure to access these libraries. With only basic OOP PHP and MVC you can use this framework
+<!-- ABOUT THE Web Chat -->
+## About The Web Chat
+Webchat is a format that allows customers to communicate directly with them online, often on their website and in real time. The web chat window appears as an overlay of website pages in the browser, allowing users to type messages directly into text fields, and often attach images and other files as well.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Server Requirements
@@ -55,6 +44,7 @@ It should work on 5.4.8 as well, but we strongly advise you NOT to run such old 
 ### Built With
 
 * [PHP](https://www.php.net/)
+* [JAVASCRIPT](https://www.javascript.com/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -65,27 +55,27 @@ Before starting we prepare a few things first such as config composer, database 
 
 ### Installation
 
-1. Clone the repo
+1. Clone the repo web chat
    ```sh
-   git clone https://github.com/fajar-subhan/FS_Framework.git
+   git clone https://github.com/fajar-subhan/WebChat.git
    ```
 2. Install Composer
    ```sh
    composer install
    ```
-3. Rename the .env.example file to .env only
-4. Please fill in the .env file as follows
+3. Import chat.sql file into database
+4. Rename the .env.example file to .env only
+5. Please fill in the .env file as follows
   ```sh
     DB_DSN  = mysql:host=localhost;dbname=database_name;port:database_port
     DB_USER = username
     DB_PASS = password
   ```
-5. Define the controller and its layout first in the config/config.php file
+6. Define the controller in the config/config.php file
  ```sh
-    if(!defined('LAYOUT')) define('LAYOUT','Layout Name');
     if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
   ```
-6. Happy coding :)
+7. Happy coding :)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -101,7 +91,7 @@ Distributed under the MIT License.
 
 Fajar Subhan - fajarsubhan9b@gmail.com
 
-Project Link: [FS Framework](https://github.com/fajar-subhan/FS_Framework)
+Project Link: [Web Chat](https://github.com/fajar-subhan/WebChat.git)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

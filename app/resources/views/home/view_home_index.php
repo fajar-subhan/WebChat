@@ -86,9 +86,7 @@
                             <span class="input-group-text file_span"><i class="fa fa-paperclip" aria-hidden="true"></i></span>
                             <input type="file" class="file" id="file_upload">
                         </label>
-                        <form id="textarea_message">
-                            <textarea class="form-control type_msg"  id="type_message" placeholder="Type your message..."></textarea>
-                        </form>
+                        <textarea class="form-control type_msg"  id="type_message" placeholder="Type your message..."></textarea>
                         <div class="input-group-append">
                             <label for="file_send">
                                 <span class="input-group-text file_span" id="file_send"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>

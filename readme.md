@@ -4,7 +4,7 @@
 
 <div align="center">
   <a href="https://github.com/fajar-subhan/WebChat">
-    <img src="https://raw.githubusercontent.com/fajar-subhan/WebChat/master/assets/images/icons/favicon.ico?token=AJ2SBHE5KVABLVY2AUNQ5ZDBQ2WSQ" alt="Logo" width="80" height="80">
+    <img src="https://github.com/fajar-subhan/WebChat/blob/master/assets/images/icons/logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Web Chat</h3>

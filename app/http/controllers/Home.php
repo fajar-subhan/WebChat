@@ -659,14 +659,7 @@ class Home extends Controller
                 }
 
         
-                $data .= ' <li class="list-contact" id="'.Encrypt($val['id']).'"> 
-                <div class="d-flex bd-highlight"> <div class="img_cont"> 
-                <img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> 
-                <span class="'.$icon.'"></span> 
-                </div>
-                <div class="user_info"> 
-                <span class="user_info_username">'.$val['fullname'].'</span> 
-                <span class="last_message">'.$chat_read . ' ' . str_replace(base64_decode(Post()->search),'<b>'. base64_decode(Post()->search) . '</b>',substr($val['content'],0,30)).'</span> <span class="time-meta pull-right"> '.date('H:i',strtotime($val['chat_date'])).' </span> </div></div></div></div></li>';
+                $data .= '<li class="list-contact" id="'.Encrypt($val['id']).'"><div class="d-flex bd-highlight"><div class="img_cont"><img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> <span class="'.$icon.'"></span></div><div class="user_info"><span class="user_info_username">'.$val['fullname'].'</span> <span class="last_message">'.$chat_read . ' ' . str_replace(base64_decode(Post()->search),'<b>'. base64_decode(Post()->search) . '</b>',substr($val['content'],0,30)).'</span> <span class="time-meta pull-right">'.date('H:i',strtotime($val['chat_date'])).'</span></div></div></li>';
             }
             
             $result = ['status' => true,'data' => $data];

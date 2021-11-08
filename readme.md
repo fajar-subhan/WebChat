@@ -92,9 +92,9 @@ Before starting we prepare a few things first such as config composer, database 
  ```sh
     if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
   ```
-9. Define the controller in the config/config.php file
+9. Define the base url in the config/config.php file
  ```sh
-    if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
+    if(!defined('BASE_URL')) define('BASE_URL','Hostname or chat path');
   ```
 10. Create a files folder in the app/assets/ folder
 11. Create a chat folder in the app/assets/images/ folder

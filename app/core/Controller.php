@@ -62,6 +62,7 @@ class Controller
         echo App::$view->renderLayoutView($view,$params);
     }
 
+ 
     /**
      * To connect to the model class
      * 
@@ -71,11 +72,17 @@ class Controller
     {
         try 
         {
-            $this->load = "app\models\\" . $name_model . ".php";
+            $this->load = "app/models/" . $name_model . ".php";
+            
             if(file_exists($this->load))
             {
+                
                 require_once $this->load;
+
+                $this->load = "app\models\\" . $name_model;
+
                 $this->load = str_replace(".php","",$this->load);
+                
                 return new $this->load;
             }
             else 

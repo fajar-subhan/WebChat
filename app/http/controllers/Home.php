@@ -193,27 +193,7 @@ class Home extends Controller
                     $new_message = "";
                 }
 
-                $data .= '
-            <li class="list-contact" id="'.Encrypt($val['id']).'">
-                <div class="d-flex bd-highlight">
-                    <div class="img_cont"> <img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> <span class="'.$icon.'"></span> </div>
-                        <div class="user_info">
-                            <span class="user_info_username">'.$val['fullname'].'</span>
-                            <span class="last_message">' . $chat_read . ' ' . $last_message .'</span>
-
-                            <span class="time-meta pull-right">
-                            '.$last_date.'							
-                            </span>
-
-                            <span class="badge badge-success">'.$new_message.'</span>
-
-                        </div>
-                    </div>
-
-                </div>
-                
-                </div>
-            </li>';
+                $data .= ' <li class="list-contact" id="'.Encrypt($val['id']).'"> <div class="d-flex bd-highlight"> <div class="img_cont"> <img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> <span class="'.$icon.'"></span> </div><div class="user_info"> <span class="user_info_username">'.$val['fullname'].'</span> <span class="last_message">' . $chat_read . ' ' . $last_message .'</span> <span class="time-meta pull-right"> '.$last_date.' </span> <span class="badge badge-success">'.$new_message.'</span> </div></div></div></div></li>';
             }
 
             $result = ['status' => true,'data' => $data];
@@ -221,7 +201,8 @@ class Home extends Controller
         }
 
         header('Content-Type: application/json');
-        echo json_encode($result);
+        $encode = mb_convert_encoding($result,'UTF-8','auto');
+        echo json_encode($encode);
     }
 
     /**

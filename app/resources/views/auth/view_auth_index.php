@@ -19,9 +19,9 @@
                 </div>
 
                 <div class="text-right p-t-8 p-b-31">
-                    <span>
+                    <span class="forgot_password" style="font-family: Poppins-Regular;font-size : 14px;line-height:1.7;color:#666666;margin:0px;padding-right:34%;">
                         <input type="checkbox" name="remember" id="remember">
-                        <label for="remember" style="font-family: Poppins-Regular;font-size : 14px;line-height:1.7;color:#666666;margin:0px;padding-right:34%;">
+                        <label for="remember">
                             Remember me?
                         </label>
                     </span>

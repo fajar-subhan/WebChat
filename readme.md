@@ -74,17 +74,24 @@ Before starting we prepare a few things first such as config composer, database 
    ```
 3. Import chat.sql file into database
 4. Rename the .env.example file to .env only
-5. Please fill in the .env file as follows
+5. Rename the file app/helpers/Security_example.ini to Security.ini only and input some parameters
+```sh
+  encription_key  = "The key of this encryption is secret";
+  encription_iv   = "A non-NULL Initialization Vector";
+  encription_algo = "The cipher method. For a list of available cipher methods";
+```
+
+6. Please fill in the .env file as follows
   ```sh
     DB_DSN  = mysql:host=localhost;dbname=database_name;port:database_port
     DB_USER = username
     DB_PASS = password
   ```
-6. Define the controller in the config/config.php file
+7. Define the controller in the config/config.php file
  ```sh
     if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
   ```
-7. Happy coding :)
+8. Happy coding :)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

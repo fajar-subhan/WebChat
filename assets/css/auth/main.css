@@ -473,4 +473,9 @@ iframe {
     padding-left: 15px;
     padding-right: 15px;
   }
+
+  .forgot_password {
+    padding-right: 0px !important;
+    margin-right: 9% !important;
+  }
 } 

@@ -146,15 +146,13 @@ $(document).ready(function () {
          * Show contact chat list every second with ajax
          * 
          */
-        var id = "";
-        var data   = { id : btoa(id)};
         var search = $(".search").val();
+
         if(search.length == 0)
         {
             $.ajax({
                 url      : 'home/getDataListContact',
                 type     : 'post',
-                data     : data,
                 dataType : 'json',
                 success  : function(xhr)
                 {

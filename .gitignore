@@ -15,3 +15,6 @@ assets/images/chat/*.jpeg
 # Files  
 assets/files/*.pdf
 assets/files/*.zip
+
+# Contact 
+assets/images/contacts

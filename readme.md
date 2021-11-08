@@ -91,9 +91,13 @@ Before starting we prepare a few things first such as config composer, database 
  ```sh
     if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
   ```
-8. Create a files folder in the app/assets/ folder
-9. Create a chat folder in the app/assets/images/ folder
-10. Happy Coding :)
+8. Define the controller in the config/config.php file
+ ```sh
+    if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
+  ```
+9. Create a files folder in the app/assets/ folder
+10. Create a chat folder in the app/assets/images/ folder
+11. Happy Coding :)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

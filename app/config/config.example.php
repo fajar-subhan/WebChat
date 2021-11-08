@@ -22,4 +22,4 @@ if(!defined('CONTROLLER')) define('CONTROLLER','auth');
  * 
  * Example https://www.example.com/ 
  */
-if(!defined('BASE_URL')) define('BASE_URL','');
+if(!defined('BASE_URL')) define('BASE_URL','Hostname or chat path');

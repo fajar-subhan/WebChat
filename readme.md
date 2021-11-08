@@ -91,7 +91,9 @@ Before starting we prepare a few things first such as config composer, database 
  ```sh
     if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
   ```
-8. Happy coding :)
+8. Create a files folder in the app/assets/ folder
+9. Create a chat folder in the app/assets/images/ folder
+10. Happy Coding :)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

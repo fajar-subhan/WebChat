@@ -87,17 +87,18 @@ Before starting we prepare a few things first such as config composer, database 
     DB_USER = username
     DB_PASS = password
   ```
-7. Define the controller in the config/config.php file
- ```sh
-    if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
-  ```
+7. Rename the config.example.php file to config.php only 
 8. Define the controller in the config/config.php file
  ```sh
     if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
   ```
-9. Create a files folder in the app/assets/ folder
-10. Create a chat folder in the app/assets/images/ folder
-11. Happy Coding :)
+9. Define the controller in the config/config.php file
+ ```sh
+    if(!defined('CONTROLLER')) define('CONTROLLER','Controller Name');
+  ```
+10. Create a files folder in the app/assets/ folder
+11. Create a chat folder in the app/assets/images/ folder
+12. Happy Coding :)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

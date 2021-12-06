@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               10.4.13-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
--- HeidiSQL Version:             11.3.0.6365
+-- HeidiSQL Version:             11.3.0.6370
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -14,11 +14,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- Dumping database structure for chat
-CREATE DATABASE IF NOT EXISTS `chat` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
-USE `chat`;
-
 -- Dumping structure for table chat.mst_chat
 CREATE TABLE IF NOT EXISTS `mst_chat` (
   `chat_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -27,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `mst_chat` (
   `chat_content` text COLLATE utf8mb4_bin DEFAULT NULL,
   `chat_read` tinyint(2) DEFAULT 0 COMMENT '1 = read , 0 = no read',
   `chat_type` mediumtext CHARACTER SET utf8mb4 DEFAULT NULL COMMENT 'text | file ',
+  `chat_order` int(11) DEFAULT 1,
   `chat_created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`chat_id`) USING BTREE,
   KEY `chat_sender_id` (`chat_sender_id`),
@@ -41,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `mst_typing` (
   `typing_sender_id` int(11) DEFAULT NULL,
   `typing_receive_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`typing_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
 -- Dumping data for table chat.mst_typing: ~0 rows (approximately)
 

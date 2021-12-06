@@ -203,7 +203,8 @@ class M_Home extends Model
         INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
         WHERE 
         (a.chat_sender_id = ? AND a.chat_receive_id = ?) 
-        OR (a.chat_sender_id = ? AND a.chat_receive_id = ?);
+        OR (a.chat_sender_id = ? AND a.chat_receive_id = ?)
+        ORDER BY a.chat_order ASC;
         ";
 
         $this->db->query($sql,[$contactID,$myID,$myID,$contactID]);
@@ -268,7 +269,8 @@ class M_Home extends Model
         a.chat_type,
         a.chat_created_at as chat_date,
         b.user_photo as photo,
-        b.user_status_online AS stts_online
+        b.user_status_online AS stts_online,
+        a.chat_order as orders
         FROM {$this->table} 
         INNER JOIN mst_user b ON b.user_id = a.chat_sender_id
         WHERE 
@@ -397,10 +399,14 @@ class M_Home extends Model
      * When the button is entered, the chat message process
      * 
      * @param string $chat_type
+     * @param string $contactID
+     * @param string $myID
      * @return int $count
      */
-    public function _sendChat($chat_type)
+    public function _sendChat($chat_type,$contactID,$myID)
     {
+        
+        $order = $this->_getDataLastChat($contactID,$myID);
 
         $count = 0;
         $this->db->set('chat_sender_id',userdata('id'));
@@ -409,6 +415,14 @@ class M_Home extends Model
         $this->db->set('chat_read',0);
         $this->db->set('chat_type',$chat_type);
         $this->db->set('chat_created_at',date('Y-m-d H:i:s'));
+        if(count($order) == 0)
+        {
+            $this->db->set('chat_order',1);
+        }
+        else 
+        {
+            $this->db->set('chat_order',$order['orders'] + 1);
+        }
         $this->db->insert('mst_chat');
         
         if($this->db->num_rows() > 0)
@@ -418,6 +432,7 @@ class M_Home extends Model
 
         return $count;
     }
+
 
     /**
      * Restore last chat data
@@ -533,10 +548,19 @@ class M_Home extends Model
          */
         $friendsID = Decrypt(Post()->friendsID);
 
+        $order = $this->_getDataLastChat($friendsID,$myID);
         $this->db->set('chat_sender_id',$myID);
         $this->db->set('chat_receive_id',$friendsID);
         $this->db->set('chat_content',$filename);
-        $this->db->set('chat_read',0);
+        $this->db->set('chat_read',1);
+        if(count($order) == 0)
+        {
+            $this->db->set('chat_order',1);
+        }
+        else 
+        {
+            $this->db->set('chat_order',$order['orders'] + 1);
+        }
         $this->db->set('chat_type','images');
         $this->db->set('chat_created_at',date('Y-m-d H:i:s'));
         $this->db->insert('mst_chat');
@@ -573,11 +597,22 @@ class M_Home extends Model
          */
         $friendsID = Decrypt(Post()->friendsID);
 
+        $order = $this->_getDataLastChat($friendsID,$myID);
+
         $this->db->set('chat_sender_id',$myID);
         $this->db->set('chat_receive_id',$friendsID);
         $this->db->set('chat_content',$filename);
         $this->db->set('chat_read',0);
         $this->db->set('chat_type','files');
+        if(count($order) == 0)
+        {
+            $this->db->set('chat_order',1);
+        }
+        else 
+        {
+            $this->db->set('chat_order',$order['orders'] + 1);
+        }
+
         $this->db->set('chat_created_at',date('Y-m-d H:i:s'));
         $this->db->insert('mst_chat');
 

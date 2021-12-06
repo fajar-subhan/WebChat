@@ -451,7 +451,7 @@ class Home extends Controller
             {           
                 $color      = $rows['sender_id'] == userdata('id') ?  'msg_cotainer' : 'msg_cotainer_send';
                 $images     = ASSETS_IMAGES . 'contacts/' . $rows['photos'];
-                $position   = $rows['sender_id'] == userdata('id') ? 'justify-content-end' : 'justify-content-start';
+                $position   = $rows['sender_id'] == userdata('id') ? 'justify-content-start' : 'justify-content-end';
                 $time       = date('H:i',strtotime($rows['chat_date']));
                 
                 $chat_read  = '<span>&#10004;</span>'; 
@@ -658,7 +658,23 @@ class Home extends Controller
     public function sendChat()
     {
         $result = ['status' => false,'content' => null];
-        $send = $this->M_Home->_sendChat('text');
+
+        /**
+         * This comes from my session id when logging in
+         * 
+         * @var string $id
+         */
+        $myID = userdata('id');
+
+        /**
+         * This comes from the id belonging to each contact list.
+         * Which comes from mst_user.user_id
+         * 
+         * @var string $id
+         */
+        $contactID = Decrypt(Post()->contactID);
+
+        $send = $this->M_Home->_sendChat('text',$contactID,$myID);
 
         $content = "";
         /**

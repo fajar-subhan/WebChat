@@ -45,7 +45,7 @@ Webchat is a format that allows customers to communicate directly with them onli
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Server Requirements
-PHP version 5.6 or newer is recommended.
+PHP version 7.0 or newer is recommended.
 
 It should work on 5.4.8 as well, but we strongly advise you NOT to run such old versions of PHP, because of potential security and performance issues, as well as missing features.
 
@@ -96,8 +96,8 @@ Before starting we prepare a few things first such as config composer, database 
  ```sh
     if(!defined('BASE_URL')) define('BASE_URL','Hostname or chat path');
   ```
-10. Create a files folder in the app/assets/ folder
-11. Create a chat folder in the app/assets/images/ folder
+10. Create a '[files] folder' inside the /assets folder
+11. Create a '[chat] folder' inside the /assets/images folder
 12. Happy Coding :)
 
 <p align="right">(<a href="#top">back to top</a>)</p>

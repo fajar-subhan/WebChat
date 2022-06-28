@@ -180,7 +180,7 @@ class M_Home extends Model
          * 
          * @var string $id
          */
-        $contactID = Decrypt(Post()->id);
+        $contactID = @Decrypt(Post()->id);
 
         /**
          * This comes from my session id when logging in

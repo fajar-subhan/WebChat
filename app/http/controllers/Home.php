@@ -193,7 +193,10 @@ class Home extends Controller
                     $new_message = "";
                 }
 
-                $data .= ' <li class="list-contact" id="'.Encrypt($val['id']).'"> <div class="d-flex bd-highlight"> <div class="img_cont"> <img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> <span class="'.$icon.'"></span> </div><div class="user_info"> <span class="user_info_username">'.$val['fullname'].'</span> <span class="last_message">' . $chat_read . ' ' . $last_message .'</span> <span class="time-meta pull-right"> '.$last_date.' </span> <span class="badge badge-success">'.$new_message.'</span> </div></div></div></div></li>';
+                /* First check if the photo is currently available */
+                $photo = $this->checkPhoto($val['photo']);
+
+                $data .= ' <li class="list-contact" id="'.Encrypt($val['id']).'"> <div class="d-flex bd-highlight"> <div class="img_cont"> <img src="'.$photo.'" class="rounded-circle user_img"> <span class="'.$icon.'"></span> </div><div class="user_info"> <span class="user_info_username">'.$val['fullname'].'</span> <span class="last_message">' . $chat_read . ' ' . $last_message .'</span> <span class="time-meta pull-right"> '.$last_date.' </span> <span class="badge badge-success">'.$new_message.'</span> </div></div></div></div></li>';
             }
 
             $result = ['status' => true,'data' => $data];
@@ -403,6 +406,29 @@ class Home extends Controller
         header('Content-Type: application/json');
         echo json_encode($result);
     }
+
+    /**
+     * Check if the profile photo exists, if not then use the default one
+     *
+     * @param string $val
+     * @return string $photo
+     */
+    public function checkPhoto($val)
+    {
+        /* First check if the photo is currently available */
+        $photo = str_replace("\\","/",ROOT_PATH) . ASSETS_IMAGES . "contacts/" . $val;
+
+        if(file_exists($photo))
+        {
+            $photo = BASE_URL . ASSETS_IMAGES . "contacts/" . $val;
+        }
+        else 
+        {
+            $photo = BASE_URL . ASSETS_IMAGES . "contacts/default.jpg";
+        }
+
+        return $photo;
+    }
     
     /**
      * This method is useful for displaying chat content
@@ -449,8 +475,10 @@ class Home extends Controller
             
             foreach($show_chat as $rows)
             {           
+                
+
                 $color      = $rows['sender_id'] == userdata('id') ?  'msg_cotainer' : 'msg_cotainer_send';
-                $images     = ASSETS_IMAGES . 'contacts/' . $rows['photos'];
+                $images     = $this->checkPhoto($rows['photos']);
                 $position   = $rows['sender_id'] == userdata('id') ? 'justify-content-start' : 'justify-content-end';
                 $time       = date('H:i',strtotime($rows['chat_date']));
                 
@@ -530,7 +558,7 @@ class Home extends Controller
     
         if($profile_friends)
         {
-            $images     =  ASSETS_IMAGES . 'contacts/' . $profile_friends['photo'];
+            $images     =  $this->checkPhoto($profile_friends['photo']);
             
             switch($profile_friends['stts_online'])
                 {
@@ -639,8 +667,10 @@ class Home extends Controller
                     $chat_read = '';
                 }
 
-        
-                $data .= '<li class="list-contact" id="'.Encrypt($val['id']).'"><div class="d-flex bd-highlight"><div class="img_cont"><img src="'.BASE_URL.'assets/images/contacts/'.$val['photo'].'" class="rounded-circle user_img"> <span class="'.$icon.'"></span></div><div class="user_info"><span class="user_info_username">'.$val['fullname'].'</span> <span class="last_message">'.$chat_read . ' ' . str_replace(base64_decode(Post()->search),'<b>'. base64_decode(Post()->search) . '</b>',substr($val['content'],0,30)).'</span> <span class="time-meta pull-right">'.date('H:i',strtotime($val['chat_date'])).'</span></div></div></li>';
+                /* First check if the photo is currently available */
+                $photo = $this->checkPhoto($val['photo']);
+
+                $data .= '<li class="list-contact" id="'.Encrypt($val['id']).'"><div class="d-flex bd-highlight"><div class="img_cont"><img src="'.$photo.'" class="rounded-circle user_img"> <span class="'.$icon.'"></span></div><div class="user_info"><span class="user_info_username">'.$val['fullname'].'</span> <span class="last_message">'.$chat_read . ' ' . str_replace(base64_decode(Post()->search),'<b>'. base64_decode(Post()->search) . '</b>',substr($val['content'],0,30)).'</span> <span class="time-meta pull-right">'.date('H:i',strtotime($val['chat_date'])).'</span></div></div></li>';
             }
             
             $result = ['status' => true,'data' => $data];

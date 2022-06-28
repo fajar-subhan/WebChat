@@ -10,7 +10,7 @@
                             <div class="d-flex bd-highlight">
                                 <div id="action_profile_btn">
                                     <div class="img_cont">
-                                        <img id="profile_img" src="<?php echo BASE_URL ?>assets/images/contacts/<?php echo Decrypt(GetProfile(userdata('id'))['photo']); ?>" class="rounded-circle user_img">
+                                        <img id="profile_img" src="<?php echo CheckPhotoProfile() ?>" class="rounded-circle user_img">
 
                                         <span class="<?php echo StatusIcon(GetProfile(userdata('id'))['online']) ?>" id="profile_status"></span>
                                     </div>

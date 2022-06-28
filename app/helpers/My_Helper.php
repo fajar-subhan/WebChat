@@ -570,3 +570,45 @@ if(!function_exists('StatusIcon'))
         return $result;
     }
 }
+
+/**
+ * Dump and die 
+ * 
+ * @param string|int|array $val
+ * @return void
+ */
+if(!function_exists('dd'))
+{
+    function dd($val)
+    {
+        echo "<pre>";
+        var_dump($val);
+        echo "</pre>";
+        die();
+    }
+}
+
+/**
+ * Check if the user profile photo is available, 
+ * if not then use the default image
+ * 
+ * @return string
+ */
+if(!function_exists('CheckPhotoProfile'))
+{
+    function CheckPhotoProfile()
+    {
+        $file = ROOT_PATH . "/assets/images/contacts/" . Decrypt(GetProfile(userdata('id'))['photo']);
+
+        if(file_exists($file))
+        {
+            $profile = BASE_URL . "assets/images/contacts/" . Decrypt(GetProfile(userdata('id'))['photo']);
+        }
+        else 
+        {
+            $profile = BASE_URL . "assets/images/contacts/default.jpg"; 
+        }
+
+        return $profile;
+    }
+}
